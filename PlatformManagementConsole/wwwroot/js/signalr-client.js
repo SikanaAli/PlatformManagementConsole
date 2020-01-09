@@ -13,6 +13,10 @@ s_client.start().then(function () {
     });
 
 s_client.on("MqttData", (data) => {
-    console.dir(data)
+   
+
+    //data = JSON.parse(data)
+    
+    console.log(data)
     
 })

@@ -15,6 +15,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PlatformManagementConsole.Hubs;
 using Microsoft.AspNetCore.SignalR;
+using PlatformManagementConsole.Contexts;
 
 namespace PlatformManagementConsole.Controllers
 {
@@ -60,12 +61,16 @@ namespace PlatformManagementConsole.Controllers
             {
                 JObject data = new JObject();
 
+                
+
+                
+
                 data.Add("topic", e.ApplicationMessage.Topic.ToString());
                 data.Add("msg", Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
 
                 var dataToSend = data.ToString();
                 Console.WriteLine(dataToSend);
-                await _hubContext.Clients.All.SendAsync("MqttData", dataToSend);
+                await _hubContext.Clients.All.SendAsync("MqttData", data.GetValue("msg"));
             });
 
 
@@ -79,12 +84,47 @@ namespace PlatformManagementConsole.Controllers
 
             mqttClient.UseDisconnectedHandler(async e =>
             {
-                await _hubContext.Clients.All.SendAsync("MqttData", "Disconnected");
+                await _hubContext.Clients.All.SendAsync("MqttData","Server MQTT Disconnected");
             });
 
 
             await mqttClient.ConnectAsync(mqttClientOptions);
         }
+
+
+        private void AddResolver(byte[] payload)
+        {
+            var data = JsonConvert.DeserializeObject<Resolver>(Encoding.Unicode.GetString(payload));
+
+            using(var db = new PmcDbContext())
+            {
+                if (db.Resolvers.Count((item)=>item.Guid == data.Guid)==0)
+                {
+                    db.Resolvers.Add(new Resolver
+                    {
+                        Id = data.Id,
+                        Guid = data.Guid,
+                        Name = data.Name,
+                        DeviceType = data.DeviceType,
+                        Platform = data.Platform,
+                        OsVersion = data.OsVersion,
+                        OEM = data.OEM,
+                        Model = data.Model,
+                        IsOnline = data.IsOnline
+                    });
+
+                    db.SaveChanges();
+
+                    var dataInDb = db.Resolvers;
+
+                    _hubContext.Clients.All
+                }
+                
+            }
+
+
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
