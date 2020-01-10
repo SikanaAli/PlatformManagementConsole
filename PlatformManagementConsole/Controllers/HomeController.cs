@@ -63,7 +63,11 @@ namespace PlatformManagementConsole.Controllers
 
                 
 
-                
+                if(e.ApplicationMessage.Topic.ToString() == "cmsb/init")
+                {
+                    
+                    await AddResolver(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
+                }
 
                 data.Add("topic", e.ApplicationMessage.Topic.ToString());
                 data.Add("msg", Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
@@ -92,32 +96,33 @@ namespace PlatformManagementConsole.Controllers
         }
 
 
-        private void AddResolver(byte[] payload)
+        private async Task AddResolver(string payload)
         {
-            var data = JsonConvert.DeserializeObject<Resolver>(Encoding.Unicode.GetString(payload));
+            var data = JObject.Parse(payload);
+            Console.WriteLine("data => {0}", data);
+            await _hubContext.Clients.All.SendAsync("MqttData", data);
 
-            using(var db = new PmcDbContext())
+            using (var db = new PmcDbContext())
             {
-                if (db.Resolvers.Count((item)=>item.Guid == data.Guid)==0)
+                if (db.Resolvers.Count((item)=>item.Guid == data.GetValue("Guid").ToString()) ==0)
                 {
                     db.Resolvers.Add(new Resolver
                     {
-                        Id = data.Id,
-                        Guid = data.Guid,
-                        Name = data.Name,
-                        DeviceType = data.DeviceType,
-                        Platform = data.Platform,
-                        OsVersion = data.OsVersion,
-                        OEM = data.OEM,
-                        Model = data.Model,
-                        IsOnline = data.IsOnline
+                        Guid = data.GetValue("Guid").ToString(),
+                        Name = data.GetValue("Name").ToString(),
+                        DeviceType = data.GetValue("DeviceType").ToString(),
+                        Platform = data.GetValue("Platform").ToString(),
+                        OsVersion = data.GetValue("OsVersion").ToString(),
+                        OEM = data.GetValue("OEM").ToString(),
+                        Model = data.GetValue("Model").ToString(),
+                        IsOnline = (bool)data.GetValue("IsOnline")
                     });
 
                     db.SaveChanges();
 
                     var dataInDb = db.Resolvers;
 
-                    _hubContext.Clients.All
+                    await _hubContext.Clients.All.SendAsync("MqttData", dataInDb);
                 }
                 
             }

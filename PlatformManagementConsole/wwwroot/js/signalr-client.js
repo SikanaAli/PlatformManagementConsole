@@ -17,6 +17,6 @@ s_client.on("MqttData", (data) => {
 
     //data = JSON.parse(data)
     
-    console.log(data)
+    console.dir(data)
     
 })
