@@ -7,11 +7,7 @@ const MQTT_TOPICS = {
 }
 
 //Inititalize MQTT
-const InvokeMqtt = () => {
-    s_client.invoke("MqttConnection").catch(function (err) {
-        return console.dir(err);
-    });
-}
+
 
 //MQTT EVENT HANDLERS
 
