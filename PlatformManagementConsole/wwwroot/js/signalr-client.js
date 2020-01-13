@@ -41,19 +41,7 @@ s_client.on("RefreshResolver", (resolvers) => {
    
 
 
-    resolverTree.jstree("destroy")
-    resolverTree.jstree(
-        {
-            'core': {
-                'data': ResolverContainer,
-                themes: {
-                    icons: false
-                }
-            }
-
-        }
-    )
-    console.log(resolvers)
+    
 })
 
 

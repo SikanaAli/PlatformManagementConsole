@@ -1,33 +1,22 @@
 ﻿
 
-let ResolverContainer = [{ "id": "resolver-p", "parent": "#", "text": "Resolvers" }]
+let ResolverContainer = [{ "id": "resolver-p", "lable": "Resolvers" }]
 
-let resolverTree = $('#resolvers').jstree({
-    'core': {
-        'data': ResolverContainer,
-        themes: {
-            icons: false
+const ResolverTreeOptions = {
+    placeholder: "No Resolvers",
+    context: [{
+        lable: "Details",
+        action: (id) => {
+            console.log(id)
         }
-    }
+    }]
+}
 
-});
+const resolverTree = new VanillaTree("#resolvers", ResolverTreeOptions) 
 
-$("#resolvers").on("click",".jstree-anchor", (e) => {
-    var data = resolverTree.jstree(true).get_node($(this));
 
-    console.log(data)
+ResolverContainer.forEach((row) => {
+    resolverTree.add(row);
 })
 
 
-
-$('#Nuclei').jstree({
-    'core': {
-        'data': [
-            { "id": "ajson1", "parent": "#", "text": "Nuclei" },
-        ],
-        themes: {
-            icons: false
-        }
-    }
-
-});

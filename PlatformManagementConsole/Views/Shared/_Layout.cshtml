@@ -16,7 +16,7 @@
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"/>
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
-    <link rel="stylesheet" href="~/lib/jstree/themes/default/style.css" />
+    <link rel="stylesheet" href="~/lib/vanillatree/vanillatree.css" />
 </head>
 <body>
     <header>
@@ -39,17 +39,13 @@
     </header>
     <div id="main" class="container-fluid" style="margin-top: -16px; height: calc(100vh - 120px)">
         <partial name="_CookieConsentPartial" />
-
         @RenderBody()
-
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2020 - PlatformManagementConsole - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
-
     <environment include="Development">
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
@@ -68,16 +64,15 @@
                 crossorigin="anonymous"
                 integrity="sha384-xrRywqdh3PHs8keKZN+8zzc5TX0GRTLCcmivcbNJWm2rs5C8PRhcEn3czEjhAO9o">
         </script>
-        <script src="~/lib/jstree/jstree.js"></script>
+
     </environment>
+    <script src="~/lib/vanillatree/vanillatree.min.js"></script>
     <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/lib/mqtt/paho-mqtt.js"></script>
     <script src="~/lib/friconix/friconix.js"></script>
     <script src="~/js/sidebar-trees.js"></script>
     <script src="~/js/signalr-client.js" asp-append-version="true"></script>
     <script src="~/js/mqtt-client.js"></script>
-
-
 
 
     @RenderSection("Scripts", required: false)
