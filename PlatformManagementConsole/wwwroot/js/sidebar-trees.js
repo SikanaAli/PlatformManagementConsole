@@ -1,13 +1,19 @@
 ﻿
 
-let ResolverContainer = [{ "id": "resolver-p", "lable": "Resolvers" }]
-
+let ResolverContainer = [{ "label": "Resolvers", "id": "resolver-p" }]
+let childResolvers = []
 const ResolverTreeOptions = {
     placeholder: "No Resolvers",
-    context: [{
-        lable: "Details",
-        action: (id) => {
-            console.log(id)
+    contextmenu: [{
+        label: "Details",
+        action: (id,data) => {
+            $.ajax({
+                url: "http://" + location.host + "/Publish/"+id+"?msg=From Pmc",
+                Method: "GET",
+                success: (r) => {
+                    console.log(r);
+                }
+            })
         }
     }]
 }

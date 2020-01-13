@@ -30,20 +30,36 @@ s_client.on("AddResolver", (resolver) => {
 
 s_client.on("RefreshResolver", (resolvers) => {
 
-    resolvers.forEach((row, i) => {
-        let child = { id: row.id, parent: "resolver-p", text: row.text }
+    let tempResolvers = []
+    resolvers.forEach((row) => {
+        console.log(row)
+        let { text, id } = row
 
-        
-        ResolverContainer.push(child);
+        console.log(text)
+        tempResolvers.push({
+            label: `${text}`,
+            id,
+            parent:"resolver-p"
+        });
     })
 
-
+    $("ul .vtree-subtree").remove()
+    childResolvers = tempResolvers;
+    tempResolvers.forEach((resolver) => {
+        console.log("R => ",resolver)
+        resolverTree.add(resolver)
+    })
    
-
-
     
 })
 
+s_client.on("MqttConnected", (result) => {
+    console.log(result);
+})
+
+s_client.on("Undefined", (data) => {
+    console.log(data)
+})
 
 //Click Events
 

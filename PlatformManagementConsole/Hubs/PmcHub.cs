@@ -20,7 +20,7 @@ namespace PlatformManagementConsole.Hubs
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
 
-        private class clientResolver
+        public class clientResolver
         {
             public string Id { get; set; }
             public string Text { get; set; }
