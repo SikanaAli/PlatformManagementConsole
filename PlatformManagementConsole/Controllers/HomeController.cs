@@ -122,7 +122,7 @@ namespace PlatformManagementConsole.Controllers
 
                     var dataInDb = db.Resolvers;
 
-                    await _hubContext.Clients.All.SendAsync("MqttData", dataInDb);
+                    await _hubContext.Clients.All.SendAsync("RefreshResolvers", dataInDb);
                 }
                 
             }

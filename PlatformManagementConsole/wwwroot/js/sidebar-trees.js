@@ -1,10 +1,10 @@
 ﻿
 
-let resolvers = [{ "id": "ajson1", "parent": "#", "text": "Resolvers" }]
+let resolverContainer = [{ "id": "resolver-p", "parent": "#", "text": "Resolvers" }]
 
-$('#resolvers').jstree({
+let resolvers = $('#resolvers').jstree({
     'core': {
-        'data': resolvers,
+        'data': resolverContainer,
         themes: {
             icons: false
         }

@@ -20,3 +20,46 @@ s_client.on("MqttData", (data) => {
     console.dir(data)
     
 })
+
+s_client.on("RefreshResolvers", (data) => {
+
+    
+
+    let { name, guid } = data[0];
+
+    let child = new Object();
+    child.id = guid;
+    child.parent = "resolver-p";
+    child.text = name;
+    
+    
+
+
+    resolverContainer.push(child);
+
+    console.log("child", resolverContainer)
+
+    
+    resolvers.jstree("destroy");
+    //$('#resolvers').jstree({
+    //    'core': {
+    //        'data': resolverContainer,
+    //        themes: {
+    //            icons: false
+    //        }
+    //    }
+    //});
+    
+})
+
+const RefreshResolver = () => {
+    s_client.invoke("RequestRefreshResolvers").catch(function (err) {
+        return console.dir(err);
+    });
+}
+
+
+$("#refresh-resolver").click((e) => {
+    console.log("Clicked");
+    RefreshResolver();
+})

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using PlatformManagementConsole.Contexts;
 
 
 namespace PlatformManagementConsole.Hubs
@@ -34,6 +35,19 @@ namespace PlatformManagementConsole.Hubs
         {
             
             await Clients.All.SendAsync("MqttData",data);
+        }
+
+
+        public async Task RequestRefreshResolvers()
+        {
+            using(var db = new PmcDbContext())
+            {
+                var data = db.Resolvers;
+                await Clients.All.SendAsync("RefreshResolvers", data);
+            }
+
+
+            
         }
 
     }
