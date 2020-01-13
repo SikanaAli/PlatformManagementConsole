@@ -61,12 +61,30 @@ namespace PlatformManagementConsole.Controllers
             {
                 JObject data = new JObject();
 
-                
+                string topic = e.ApplicationMessage.Topic;
+
+                switch (topic)
+                {
+                    case "cmsb/resolver/init":
+                            string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+                            await AddResolver(payload);
+                        break;
+                    case "cmsb/resolver/status":
+                        break;
+
+                    default:
+                            await _hubContext.Clients.All.SendAsync("Undefined", e.ApplicationMessage);
+                        break;
+                }
 
                 if(e.ApplicationMessage.Topic.ToString() == "cmsb/init")
                 {
                     
                     await AddResolver(Encoding.UTF8.GetString(e.ApplicationMessage.Payload));
+                }
+                else
+                {
+                    await _hubContext.Clients.All.SendAsync("MqttData", e);
                 }
 
                 data.Add("topic", e.ApplicationMessage.Topic.ToString());
@@ -99,8 +117,6 @@ namespace PlatformManagementConsole.Controllers
         private async Task AddResolver(string payload)
         {
             var data = JObject.Parse(payload);
-            Console.WriteLine("data => {0}", data);
-            await _hubContext.Clients.All.SendAsync("MqttData", data);
 
             using (var db = new PmcDbContext())
             {
@@ -120,9 +136,9 @@ namespace PlatformManagementConsole.Controllers
 
                     db.SaveChanges();
 
-                    var dataInDb = db.Resolvers;
+                    var NewResolver = db.Resolvers.Where(r => r.Guid == data.GetValue("Guid").ToString());
 
-                    await _hubContext.Clients.All.SendAsync("RefreshResolvers", dataInDb);
+                    await _hubContext.Clients.All.SendAsync("AddResolver", NewResolver);
                 }
                 
             }

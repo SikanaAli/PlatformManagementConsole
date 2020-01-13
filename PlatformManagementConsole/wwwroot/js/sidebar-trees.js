@@ -1,16 +1,23 @@
 ﻿
 
-let resolverContainer = [{ "id": "resolver-p", "parent": "#", "text": "Resolvers" }]
+let ResolverContainer = [{ "id": "resolver-p", "parent": "#", "text": "Resolvers" }]
 
-let resolvers = $('#resolvers').jstree({
+let resolverTree = $('#resolvers').jstree({
     'core': {
-        'data': resolverContainer,
+        'data': ResolverContainer,
         themes: {
             icons: false
         }
     }
 
 });
+
+$("#resolvers").on("click",".jstree-anchor", (e) => {
+    var data = resolverTree.jstree(true).get_node($(this));
+
+    console.log(data)
+})
+
 
 
 $('#Nuclei').jstree({

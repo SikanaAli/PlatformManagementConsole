@@ -5,9 +5,11 @@
 
 var s_client = new signalR.HubConnectionBuilder().withUrl("/pmc").build();
 
+
+// SignalR Events
 s_client.start().then(function () {
     console.log("Connected to SignalR")
-    InvokeMqtt();
+    
 }).catch(function (err) {
     return console.error(err.toString());
     });
@@ -21,45 +23,45 @@ s_client.on("MqttData", (data) => {
     
 })
 
-s_client.on("RefreshResolvers", (data) => {
+s_client.on("AddResolver", (resolver) => {
+    resolvers.push(resolvers[0])
+                
+})
 
-    
+s_client.on("RefreshResolver", (resolvers) => {
 
-    let { name, guid } = data[0];
+    resolvers.forEach((row, i) => {
+        let child = { id: row.id, parent: "resolver-p", text: row.text }
 
-    let child = new Object();
-    child.id = guid;
-    child.parent = "resolver-p";
-    child.text = name;
-    
-    
+        
+        ResolverContainer.push(child);
+    })
 
 
-    resolverContainer.push(child);
+   
 
-    console.log("child", resolverContainer)
 
-    
-    resolvers.jstree("destroy");
-    //$('#resolvers').jstree({
-    //    'core': {
-    //        'data': resolverContainer,
-    //        themes: {
-    //            icons: false
-    //        }
-    //    }
-    //});
+    resolverTree.jstree("destroy")
+    resolverTree.jstree(
+        {
+            'core': {
+                'data': ResolverContainer,
+                themes: {
+                    icons: false
+                }
+            }
+
+        }
+    )
+    console.log(resolvers)
+})
+
+
+//Click Events
+
+$("#reload-resolvers").click(() => {
+    s_client.invoke("RefreshResolvers");
+
     
 })
 
-const RefreshResolver = () => {
-    s_client.invoke("RequestRefreshResolvers").catch(function (err) {
-        return console.dir(err);
-    });
-}
-
-
-$("#refresh-resolver").click((e) => {
-    console.log("Clicked");
-    RefreshResolver();
-})

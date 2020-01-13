@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using PlatformManagementConsole.Contexts;
+using PlatformManagementConsole.Models;
 
 
 namespace PlatformManagementConsole.Hubs
@@ -19,36 +20,47 @@ namespace PlatformManagementConsole.Hubs
             await Clients.All.SendAsync("ReceiveMessage", user, message);
         }
 
-        public async Task MqttConnection()
+        private class clientResolver
         {
+            public string Id { get; set; }
+            public string Text { get; set; }
+            public string DeviceType { get; set; }
+            public string Platform { get; set; }
+            public string OsVersion { get; set; }
+            public string OEM { get; set; }
+            public string Model { get; set; }
+            public bool IsOnline { get; set; }
 
-
-
-
-
-            //await MakeMqttConnection();
-            Console.WriteLine("\n\n\n\n\n\n\nMQTT Invoke\n\n\n\n\n\n\n\n\n");
-            await Clients.All.SendAsync("MqttData", "Connected");
-        }
-
-        public async Task mqttHelper(string data)
-        {
-            
-            await Clients.All.SendAsync("MqttData",data);
         }
 
 
-        public async Task RequestRefreshResolvers()
+
+        public async Task RefreshResolvers()
         {
             using(var db = new PmcDbContext())
             {
-                var data = db.Resolvers;
-                await Clients.All.SendAsync("RefreshResolvers", data);
+                
+
+                var dbList = db.Resolvers.ToList();
+                List<clientResolver> clientResolvers = new List<clientResolver>();
+
+                foreach (var item in dbList)
+                {
+                    clientResolvers.Add(new clientResolver
+                    {
+                        Id = item.Guid,
+                        Text = item.Name,
+                        DeviceType = item.DeviceType,
+                        Platform = item.Platform,
+                        OsVersion = item.OsVersion,
+                        OEM = item.OEM,
+                        Model = item.Model,
+                        IsOnline = item.IsOnline
+
+                    });
+                }
+                await Clients.All.SendAsync("RefreshResolver", clientResolvers);
             }
-
-
-            
         }
-
     }
 }
