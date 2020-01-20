@@ -3,8 +3,8 @@
 
 // Write your JavaScript code.
 
-var s_client = new signalR.HubConnectionBuilder().withUrl("/pmc").build();
-
+let s_client = new signalR.HubConnectionBuilder().withUrl("/pmc").build();
+let toast = new Toasty();
 
 // SignalR Events
 s_client.start().then(function () {
@@ -22,10 +22,13 @@ s_client.on("MqttData", (data) => {
     console.dir(data)
     
 })
+s_client.on("Undefined", (data) => {
+    console.log(data)
+});
+
 
 s_client.on("AddResolver", (resolver) => {
     resolvers.push(resolvers[0])
-                
 })
 
 s_client.on("RefreshResolver", (resolvers) => {
@@ -54,12 +57,13 @@ s_client.on("RefreshResolver", (resolvers) => {
 })
 
 s_client.on("MqttConnected", (result) => {
+    toast.success(result);
+})
+
+s_client.on("MqttDisconnected", (result) => {
     console.log(result);
 })
 
-s_client.on("Undefined", (data) => {
-    console.log(data)
-})
 
 //Click Events
 

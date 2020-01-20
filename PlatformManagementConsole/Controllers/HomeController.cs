@@ -16,14 +16,29 @@ using Newtonsoft.Json.Linq;
 using PlatformManagementConsole.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using PlatformManagementConsole.Contexts;
-using PlatformManagementConsole.Hubs;
+using PlatformManagementConsole.Logic;
 
 namespace PlatformManagementConsole.Controllers
 {
     public class HomeController : Controller
     {
-      
-        public MQTTnet.Client.IMqttClient mqttClient = new MqttFactory().CreateMqttClient();
+        
+
+        private IMqttClient Client = new MqttFactory().CreateMqttClient();
+
+        public IMqttClient MqttClient
+        {
+            get
+            {
+                return Client;
+            }
+            set
+            {
+                Client = value;
+            }
+
+        }
+
 
         public string MQTT_IP = "test.mosquitto.org";
         public int MQTT_Port = 8080;
@@ -35,109 +50,120 @@ namespace PlatformManagementConsole.Controllers
 
         public HomeController(IHubContext<PmcHub> hubContext)
         {
+            
             _hubContext = hubContext;
         }
 
+        //Index Page Route
+        [HttpGet]
         public IActionResult Index()
         {
-            
             return View();
         }
 
         
-        public async Task<IActionResult> Mqtt()
+
+        public ActionResult Mqtt()
         {
-
-
-            if (mqttClient.IsConnected == false)
-            {
-                await MakeMqttConnection();
-                return Content("Mqtt Connection Requested "+mqttClient.IsConnected.ToString(),"text/html");
-            }
-            else
-            {
-                return Content("Mqtt Already Connected","text/html");
-            }
+            MqttConfigStart(MQTT_IP, MQTT_Port, MQTT_KeepAlive);
+            
+            return Content("Mqtt Route", "text/html");
         }
 
+        public IActionResult BuildForm()
+        {
+            return View();
+        }
+
+
         [Route("Home/Publish")]
-        public async Task<IActionResult> Publish(string id,string msg)
+        public IActionResult Publish(string id,string msg)
         {
             Console.WriteLine("ID => {0} MSG => {1}", id, msg);
-            string topic = "cmsb/resolver/"+id;
-            var message = new MqttApplicationMessageBuilder()
-            .WithTopic(topic)
-            .WithPayload(msg)
-            .WithExactlyOnceQoS()
-            .WithRetainFlag()
-            .Build();
-            await mqttClient.PublishAsync(message);
+            
             return Content("Published", "text/html");
         }
 
-      
 
-        public async Task MakeMqttConnection()
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
         {
-           
-            var mqttClientOptions = new MqttClientOptionsBuilder()
-                           .WithClientId("PMC_CLIENT")
-                           .WithWebSocketServer(MQTT_IP + ":" + MQTT_Port.ToString())
-                           .WithCleanSession()
-                           .WithKeepAliveSendInterval(System.TimeSpan.FromSeconds(MQTT_KeepAlive))
-                           .Build();
-            mqttClient = new MqttFactory().CreateMqttClient();
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
 
 
 
-            mqttClient.UseApplicationMessageReceivedHandler(async e =>
-            {
-                
+        //MQTT Code
+        public async void MqttConfigStart(String MQTT_IP, int MQTT_Port, Double MQTT_KeepAlive)
+        {
 
-                string topic = e.ApplicationMessage.Topic;
+                var MqttOptions = new MqttClientOptionsBuilder()
+                .WithClientId(Guid.NewGuid().ToString())
+                .WithWebSocketServer(string.Format("{0}:{1}", MQTT_IP, MQTT_Port))
+                .WithKeepAliveSendInterval(System.TimeSpan.FromSeconds(MQTT_KeepAlive))
+                .WithCleanSession()
+                .Build();
 
-                switch (topic)
+                MqttClient = new MqttFactory().CreateMqttClient();
+
+                MqttClient.UseApplicationMessageReceivedHandler(async e =>
                 {
-                    case "cmsb/resolver/init":
+                    string topic = e.ApplicationMessage.Topic;
+                    
+                    switch (topic)
+                    {
+                        case "cmsb/resolver/init":
                             string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
                             await AddResolver(payload);
-                        break;
-                    case "cmsb/resolver/status":
-                        break;
+                            break;
+                        case "cmsb/resolver/status":
+                            break;
 
-                    default:
+                        default:
+
                             await _hubContext.Clients.All.SendAsync("Undefined", e.ApplicationMessage);
-                        break;
-                }
-
-                
-
-                
-                
-            });
+                            break;
+                    }
+                });
 
 
-            mqttClient.UseConnectedHandler(async e =>
-            {
-                string result = "Connected to MQTT broker with result code {0}" + e.AuthenticateResult.ResultCode;
+                MqttClient.UseConnectedHandler(async e =>
+                {
+                    string result = string.Format("Connected to MQTT broker with result code {0}", e.AuthenticateResult.ResultCode);
 
-                await mqttClient.SubscribeAsync("cmsb/#");
-                await _hubContext.Clients.All.SendAsync("MqttConnected", result);
-            });
+                    await MqttClient.SubscribeAsync("cmsb/#");
+                    await _hubContext.Clients.All.SendAsync("MqttConnected", result);
+                });
 
+                MqttClient.UseDisconnectedHandler(async e =>
+                {
+                    await _hubContext.Clients.All.SendAsync("MqttDisconnected", "Mqtt Connection Lost.\n Attempting Reconnection");
+                    MqttClient.Dispose();
+
+                    await Task.Delay(5000);
+                    await MqttClient.ConnectAsync(MqttOptions);
+                });
+
+            await MqttClient.ConnectAsync(MqttOptions);
             
+        }
 
-            mqttClient.UseDisconnectedHandler(async e => 
+        public async void MqttPublish(string Payload, string Topic)
+        {
+            if (MqttClient.IsConnected)
             {
-                await _hubContext.Clients.All.SendAsync("MqttDisconnected","Mqtt Reconnecting");
+                var msg = new MqttApplicationMessageBuilder()
+                    .WithTopic(Topic)
+                    .WithPayload(Payload)
+                    .WithExactlyOnceQoS()
+                    .Build();
 
-                mqttClient.Dispose();
-                await mqttClient.ConnectAsync(mqttClientOptions);
-
-            });
-
-            await mqttClient.ConnectAsync(mqttClientOptions);
-            
+                await MqttClient.PublishAsync(msg);
+            }
+            else
+            {
+                await _hubContext.Clients.All.SendAsync("MqttNoConnection", "Mqtt Not Connected");
+            }
         }
 
 
@@ -147,7 +173,7 @@ namespace PlatformManagementConsole.Controllers
 
             using (var db = new PmcDbContext())
             {
-                if (db.Resolvers.Count((item)=>item.Guid == data.GetValue("Guid").ToString()) ==0)
+                if (db.Resolvers.Count((item) => item.Guid == data.GetValue("Guid").ToString()) == 0)
                 {
                     db.Resolvers.Add(new Resolver
                     {
@@ -162,8 +188,6 @@ namespace PlatformManagementConsole.Controllers
                     });
 
                     db.SaveChanges();
-
-
 
                     var dbList = db.Resolvers.ToList();
                     List<PmcHub.clientResolver> clientResolvers = new List<PmcHub.clientResolver>();
@@ -183,23 +207,9 @@ namespace PlatformManagementConsole.Controllers
 
                         });
                     }
-                    
-
-                    
-
                     await _hubContext.Clients.All.SendAsync("RefreshResolver", clientResolvers);
                 }
-                
             }
-
-
-        }
-
-
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
 }
