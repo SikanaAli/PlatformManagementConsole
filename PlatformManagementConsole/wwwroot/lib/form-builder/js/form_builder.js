@@ -1,4 +1,15 @@
+
+
 $(document).ready(function () {
+    
+
+    /*FORM BUILDER Start*/
+    $(".form_bal_titlefeild").draggable({
+        helper: function () {
+            return getTitleFeildHtml();
+        },
+        connectToSortable: ".form_builder_area"
+    });
     $(".form_bal_textfield").draggable({
         helper: function () {
             return getTextFieldHTML();
@@ -71,6 +82,12 @@ $(document).ready(function () {
         }
     });
     $(".form_builder_area").disableSelection();
+
+    function getTitleFeildHtml() {
+        var field = generateField()
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="title" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Form Title" data-field="' + field + '" /></div></div></div>'
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
+    }
 
     function getButtonFieldHTML() {
         var field = generateField();
@@ -301,6 +318,10 @@ $(document).ready(function () {
             //var field = $(this).attr('data-field');
             var label = $(this).find('.form_input_label').val();
             var name = $(this).find('.form_input_name').val();
+
+            if (data_type === 'title') {
+                return html += '<div id="title-mutiation" class="form-group text-center"><h3>'+ label +'</h3></div>'
+            }
             if (data_type === 'text') {
                 var placeholder = $(this).find('.form_input_placeholder').val();
                 var checkbox = $(this).find('.form-check-input');
@@ -396,13 +417,21 @@ $(document).ready(function () {
             console.log(html);
             $('.preview').hide();
             $('.plain_html').show().find('textarea').val(html);
-
+            let _data = {
+                'Title': "Test",
+                'Html': `${html}`
+            }
+            
             $.ajax({
-                method:"POST",
-                url: `http://${location.host}/api/Forms`,
-                data: {
-                    title: Test,
-                    html: html
+                type:"POST",
+                url: `/api/Forms`,
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(_data),
+                success: (res) => {
+                    console.log(res)
+                },
+                failure: (err) => {
+                    console.log(err)
                 }
             })
             
@@ -414,4 +443,22 @@ $(document).ready(function () {
     $(document).on('click', '.export_html', function () {
         getPreview('html');
     });
+
+    /*FORM BUILDER End */
+
+
+    //Check if Form title has been added or removed
+    let preview_el = document.querySelector(".preview")
+
+    const obsever = new MutationObserver(function () {
+        if (preview_el.contains(document.getElementById("title-mutiation"))) {
+            $("#form-builder-elements").removeClass("disabledDiv");
+            $("#export_html_btn button").removeAttr("disabled", "disabled");
+        } else {
+            $("#form-builder-elements").addClass("disabledDiv");
+            $("#export_html_btn button").attr("disabled", "disabled");
+        }
+    })
+
+    obsever.observe(preview_el, { childList: true, subtree: true })
 });

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PlatformManagementConsole.Contexts;
@@ -29,9 +31,11 @@ namespace PlatformManagementConsole.Controllers
 
         // POST: api/Forms
         [HttpPost]
-        public void Post([FromBody] dynamic value)
+        public string Post([FromBody] JObject value)
         {
-            Console.WriteLine(value);
+            //Regex html = new Regex();
+            value.GetValue("");
+            return value.ToString();
         }
 
         // PUT: api/Forms/5
@@ -45,5 +49,8 @@ namespace PlatformManagementConsole.Controllers
         public void Delete(int id)
         {
         }
+
+
+        
     }
 }

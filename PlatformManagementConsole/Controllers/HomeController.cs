@@ -43,7 +43,7 @@ namespace PlatformManagementConsole.Controllers
         public string MQTT_IP = "test.mosquitto.org";
         public int MQTT_Port = 8080;
         public float MQTT_KeepAlive = 10.0f;
-        public string RESOLVER_INIT = "cmsb/resolver/init";
+        public const string RESOLVER_INIT = "cmsb2/resolver/init";
 
 
         private readonly IHubContext<PmcHub> _hubContext;
@@ -112,7 +112,7 @@ namespace PlatformManagementConsole.Controllers
                     
                     switch (topic)
                     {
-                        case "cmsb/resolver/init":
+                        case RESOLVER_INIT:
                             string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
                             await AddResolver(payload);
                             break;
@@ -132,6 +132,7 @@ namespace PlatformManagementConsole.Controllers
                     string result = string.Format("Connected to MQTT broker with result code {0}", e.AuthenticateResult.ResultCode);
 
                     await MqttClient.SubscribeAsync("cmsb/#");
+                    await MqttClient.SubscribeAsync("cmsb2/#");
                     await _hubContext.Clients.All.SendAsync("MqttConnected", result);
                 });
 

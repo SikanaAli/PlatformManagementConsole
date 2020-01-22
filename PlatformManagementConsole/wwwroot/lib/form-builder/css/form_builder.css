@@ -1,9 +1,12 @@
 
-
+.form_builder{
+    height: calc(100% - 40px) !important
+}
 
 .form_builder .nav-sidebar { 
     width: 100%;
-    padding: 8px 0; 
+    height: 100%;
+    padding:0; 
     border-right: 1px solid #ddd;
 }
 .form_builder .nav-sidebar a {
@@ -58,6 +61,7 @@
 }
 
 .form_builder_field {
+    max-width: 93.5%;
     margin: 20px 10px;
     padding: 10px;
     background: #eee;
@@ -65,7 +69,9 @@
 }
 
 .form_builder .bal_builder {
+    margin:0 !important;
     padding: 0 !important;
+    overflow-y: scroll;
 }
 
 .margin-left-5 {
@@ -112,4 +118,9 @@
     position:absolute;
     right: 1.5rem;
     bottom: 5rem;
+}
+
+.disabledDiv {
+    pointer-events: none;
+    opacity: 0.4;
 }
