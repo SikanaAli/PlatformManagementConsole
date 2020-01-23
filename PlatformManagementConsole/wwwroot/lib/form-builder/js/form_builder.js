@@ -320,7 +320,7 @@ $(document).ready(function () {
             var name = $(this).find('.form_input_name').val();
 
             if (data_type === 'title') {
-                return html += '<div id="title-mutiation" class="form-group text-center"><h3>'+ label +'</h3></div>'
+                return html += '<div id="title-mutation" class="form-group text-center"><h3>'+ label +'</h3></div>'
             }
             if (data_type === 'text') {
                 var placeholder = $(this).find('.form_input_placeholder').val();
@@ -418,7 +418,7 @@ $(document).ready(function () {
             $('.preview').hide();
             $('.plain_html').show().find('textarea').val(html);
             let _data = {
-                'Title': "Test",
+                'Title': $("#title-mutation h3").text(),
                 'Html': `${html}`
             }
             
@@ -451,7 +451,7 @@ $(document).ready(function () {
     let preview_el = document.querySelector(".preview")
 
     const obsever = new MutationObserver(function () {
-        if (preview_el.contains(document.getElementById("title-mutiation"))) {
+        if (preview_el.contains(document.getElementById("title-mutation"))) {
             $("#form-builder-elements").removeClass("disabledDiv");
             $("#export_html_btn button").removeAttr("disabled", "disabled");
         } else {

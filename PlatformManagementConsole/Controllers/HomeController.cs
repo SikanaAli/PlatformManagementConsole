@@ -72,6 +72,7 @@ namespace PlatformManagementConsole.Controllers
 
         public IActionResult BuildForm()
         {
+            Forms forms = new Forms();
             return View();
         }
 

@@ -31,10 +31,24 @@
     </li>
 </ul>
 <div class="tab-content h-100" id="nav-tabContent" style="margin: 0; padding:0;">
-    <div class="tab-pane fade show active" id="nav-viewer" role="tabpanel" aria-labelledby="nav-viewer-tab">
-        <div class="row">
-            <div class="col-md-5 " id="form-list">LIST</div>
-            <div class="col " id="form-view">VIEW</div>
+    <div class="tab-pane fade show active h-100" id="nav-viewer" role="tabpanel" aria-labelledby="nav-viewer-tab">
+        <div class="row h-100">
+            <div class="col-md-5 " id="form-list">
+                <div>
+                    <ul class="list-group">
+                        <li class="list-group-item " >No Forms</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col " >
+                <div id="form-view">
+
+                </div>
+                <div id="export_html_btn">
+                    <button style="cursor: pointer;" disabled class="btn btn-primary" id="send-form-btn">Send Form</button>
+                </div>
+            </div>
+
         </div>
     </div>
     <div class="tab-pane fade h-100 " id="nav-creator" role="tabpanel" aria-labelledby="nav-creator-tab">

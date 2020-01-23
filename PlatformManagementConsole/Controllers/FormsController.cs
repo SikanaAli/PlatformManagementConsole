@@ -8,6 +8,11 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PlatformManagementConsole.Contexts;
 using PlatformManagementConsole.Models;
+using HtmlAgilityPack;
+using System.Net.Http;
+using System.Net;
+using PlatformManagementConsole.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace PlatformManagementConsole.Controllers
 {
@@ -15,6 +20,17 @@ namespace PlatformManagementConsole.Controllers
     [ApiController]
     public class FormsController : ControllerBase
     {
+
+        private readonly IHubContext<PmcHub> _hubContext;
+
+        public FormsController(IHubContext<PmcHub> hubContext)
+        {
+
+            _hubContext = hubContext;
+        }
+
+
+
         // GET: api/Forms
         [HttpGet]
         public IEnumerable<string> Get()
@@ -31,11 +47,44 @@ namespace PlatformManagementConsole.Controllers
 
         // POST: api/Forms
         [HttpPost]
-        public string Post([FromBody] JObject value)
+        public async Task<HttpResponseMessage> Post([FromBody] JObject form)
         {
-            //Regex html = new Regex();
-            value.GetValue("");
-            return value.ToString();
+            Regex titleRegex = new Regex(@"[\w*\s*_-]");
+
+            HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
+
+            if (titleRegex.IsMatch(form.GetValue("Title").ToString()) )
+            {
+                htmlDoc.LoadHtml(form.GetValue("Html").ToString());
+                if(htmlDoc.ParseErrors.Count() == 0)
+                {
+                    using(var db = new PmcDbContext())
+                    {
+                        try
+                        {
+                            db.Forms.Add(new Forms
+                            {
+                                Title = form.GetValue("Title").ToString(),
+                                Html = form.GetValue("Html").ToString(),
+                            });
+
+                            db.SaveChanges();
+
+                            var FormsList = db.Forms.ToList();
+                            await _hubContext.Clients.All.SendAsync("RefreshFormsList", FormsList);
+                        }
+                        catch (Exception)
+                        {
+                            return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+                        }
+                    }
+
+                    
+
+                    return new HttpResponseMessage(HttpStatusCode.OK);
+                }
+            }
+            return new HttpResponseMessage(HttpStatusCode.BadRequest);
         }
 
         // PUT: api/Forms/5

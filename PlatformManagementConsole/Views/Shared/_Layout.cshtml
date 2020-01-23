@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PlatformManagementConsole</title>
 
+
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
@@ -45,7 +47,7 @@
         </nav>
     </header>
     <div id="main" class="container-fluid" style="margin-top: -16px; height: calc(100vh - 120px)">
-        
+
         @RenderBody()
     </div>
     <footer class="border-top footer text-muted">
@@ -85,5 +87,6 @@
 
 
     @RenderSection("Scripts", required: false)
+    <script src="~/js/site.js"></script>
 </body>
 </html>
