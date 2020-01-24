@@ -49,15 +49,14 @@ namespace PlatformManagementConsole.Controllers
         [HttpPost]
         public async Task<HttpResponseMessage> Post([FromBody] JObject form)
         {
-            Regex titleRegex = new Regex(@"[\w*\s*_-]");
+            
 
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
 
-            if (titleRegex.IsMatch(form.GetValue("Title").ToString()) )
+            if (form.GetValue("Title").ToString() != (string.Empty) )
             {
                 htmlDoc.LoadHtml(form.GetValue("Html").ToString());
-                if(htmlDoc.ParseErrors.Count() == 0)
-                {
+                
                     using(var db = new PmcDbContext())
                     {
                         try
@@ -82,9 +81,11 @@ namespace PlatformManagementConsole.Controllers
                     
 
                     return new HttpResponseMessage(HttpStatusCode.OK);
-                }
+                
             }
-            return new HttpResponseMessage(HttpStatusCode.BadRequest);
+            var msg = new HttpResponseMessage(HttpStatusCode.BadRequest);
+                msg.ReasonPhrase = "HTML Parse Erroes";
+            return msg;
         }
 
         // PUT: api/Forms/5
