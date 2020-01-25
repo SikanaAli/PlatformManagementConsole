@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - PlatformManagementConsole</title>
 
+
+
     <environment include="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
     </environment>
@@ -15,9 +17,11 @@
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
     </environment>
-
+    <link rel="stylesheet" href="~/lib/toastyjs/toasty.css" />
     <link rel="stylesheet" href="~/lib/vanillatree/vanillatree.css" />
     <link rel="stylesheet" href="~/lib/toastify-js/src/toastify.min.css" />
+
+    @RenderSection("head", false)
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
 <body>
@@ -34,13 +38,16 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="BuildForm">BuildForm</a>
+                        </li>
                     </ul>
                 </div>
             </div>
         </nav>
     </header>
     <div id="main" class="container-fluid" style="margin-top: -16px; height: calc(100vh - 120px)">
-        <partial name="_CookieConsentPartial" />
+
         @RenderBody()
     </div>
     <footer class="border-top footer text-muted">
@@ -68,6 +75,7 @@
         </script>
 
     </environment>
+    <script src="~/lib/toastyjs/toasty.js"></script>
     <script src="~/lib/vanillatree/vanillatree.min.js"></script>
     <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
     <script src="~/lib/mqtt/paho-mqtt.js"></script>
@@ -79,5 +87,6 @@
 
 
     @RenderSection("Scripts", required: false)
+    <script src="~/js/site.js"></script>
 </body>
 </html>

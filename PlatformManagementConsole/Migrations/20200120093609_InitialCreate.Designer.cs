@@ -8,7 +8,7 @@ using PlatformManagementConsole.Contexts;
 namespace PlatformManagementConsole.Migrations
 {
     [DbContext(typeof(PmcDbContext))]
-    [Migration("20200109090603_InitialCreate")]
+    [Migration("20200120093609_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -16,6 +16,20 @@ namespace PlatformManagementConsole.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
+
+            modelBuilder.Entity("PlatformManagementConsole.Models.Forms", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Html");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Forms");
+                });
 
             modelBuilder.Entity("PlatformManagementConsole.Models.Resolver", b =>
                 {

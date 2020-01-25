@@ -15,6 +15,20 @@ namespace PlatformManagementConsole.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
+            modelBuilder.Entity("PlatformManagementConsole.Models.Forms", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("Html");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Forms");
+                });
+
             modelBuilder.Entity("PlatformManagementConsole.Models.Resolver", b =>
                 {
                     b.Property<int>("Id")
