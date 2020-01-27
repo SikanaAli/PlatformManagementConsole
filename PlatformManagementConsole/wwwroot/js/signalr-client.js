@@ -4,7 +4,7 @@
 // Write your JavaScript code.
 
 let s_client = new signalR.HubConnectionBuilder().withUrl("/pmc").build();
-let toast = new Toasty();
+
 
 
 // SignalR Events
@@ -51,7 +51,6 @@ s_client.on("RefreshResolver", (resolvers) => {
     $("ul .vtree-subtree").remove()
     childResolvers = tempResolvers;
     tempResolvers.forEach((resolver) => {
-        console.log("R => ", resolver)
         resolverTree.add(resolver)
     });
 });
@@ -82,7 +81,14 @@ s_client.on("RefreshFormsList", (Forms) => {
 })
 
 s_client.on("MqttConnected", (result) => {
-    toast.success(result);
+    iziToast.show({
+        theme: 'light',
+        title: 'MQTT',
+        message: result,
+        backgroundColor: 'green',
+        icon:'fi-xnluxl-network'
+        
+    })
 })
 
 s_client.on("MqttDisconnected", (result) => {

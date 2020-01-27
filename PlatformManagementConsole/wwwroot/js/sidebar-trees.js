@@ -8,7 +8,7 @@ const ResolverTreeOptions = {
         label: "Details",
         action: (id,data) => {
             $.ajax({
-                url: "http://" + location.host + "/Publish/"+id+"?msg=From Pmc",
+                url: "api/Publish/"+id+"?msg=From Pmc",
                 Method: "GET",
                 success: (r) => {
                     console.log(r);

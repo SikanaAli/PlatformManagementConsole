@@ -25,6 +25,16 @@
         "src/toastify.js",
         "src/toastify.css"
       ]
+    },
+    {
+      "provider": "cdnjs",
+      "library": "izitoast@1.4.0",
+      "destination": "wwwroot/lib/izitoast/"
+    },
+    {
+      "provider": "cdnjs",
+      "library": "izimodal@1.5.1",
+      "destination": "wwwroot/lib/izimodal/"
     }
   ]
 }
