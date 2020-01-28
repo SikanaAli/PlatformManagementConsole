@@ -7,9 +7,10 @@
         error: (response) => {
             iziToast.show({
                 theme: 'light',
+                class: 'normal-toast',
                 message: "Error Orcurred trying to initalize MQTT",
                 title:"MQTT",
-                backgroundColor: 'orange',
+                
                 icon: "fi-xnluxl-network"
             })
         }

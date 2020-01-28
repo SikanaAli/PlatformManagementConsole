@@ -21,9 +21,13 @@
     <link rel="stylesheet" href="~/lib/izimodal/css/iziModal.min.css" />
     <link rel="stylesheet" href="~/lib/vanillatree/vanillatree.css" />
     <link rel="stylesheet" href="~/lib/toastify-js/src/toastify.min.css" />
+    <link rel="stylesheet" href="~/lib/form-builder/css/font-awesome/css/font-awesome.min.css" />
 
     @RenderSection("head", false)
     <link rel="stylesheet" href="~/css/site.css" />
+
+    <script src="~/lib/jquery/dist/jquery.js"></script>
+    <script src="~/lib/friconix/friconix.js"></script>
 </head>
 <body>
     <header>
@@ -37,10 +41,14 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav ml-auto">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark @(ViewContext.RouteData.Values["Action"].ToString() == "Index" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="BuildForm">BuildForm</a>
+                            <a class="nav-link text-dark @(ViewContext.RouteData.Values["Action"].ToString() == "BuildForm" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="BuildForm">BuildForm</a>
+                            
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark @(ViewContext.RouteData.Values["Action"].ToString() == "Message" ? "active" : "")" asp-area="" asp-controller="Home" asp-action="Message">Message</a>
                         </li>
                     </ul>
                 </div>
@@ -57,17 +65,12 @@
         </div>
     </footer>
     <environment include="Development">
-        <script src="~/lib/jquery/dist/jquery.js"></script>
+
         <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.js"></script>
         <script src="~/lib/jstree/jstree.js"></script>
     </environment>
     <environment exclude="Development">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"
-                asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
-                asp-fallback-test="window.jQuery"
-                crossorigin="anonymous"
-                integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=">
-        </script>
+
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
                 asp-fallback-src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"
                 asp-fallback-test="window.jQuery && window.jQuery.fn && window.jQuery.fn.modal"
@@ -76,13 +79,11 @@
         </script>
 
     </environment>
+
     <script src="~/lib/izitoast/js/iziToast.js"></script>
     <script src="~/lib/izimodal/js/iziModal.min.js"></script>
     <script src="~/lib/vanillatree/vanillatree.min.js"></script>
     <script src="~/lib/signalr/dist/browser/signalr.min.js"></script>
-
-    <script src="~/lib/friconix/friconix.js"></script>
-    <script src="~/lib/toastify-js/src/toastify.min.js"></script>
     <script src="~/js/sidebar-trees.js"></script>
     <script src="~/js/signalr-client.js" asp-append-version="true"></script>
     <script src="~/js/mqtt-client.js"></script>

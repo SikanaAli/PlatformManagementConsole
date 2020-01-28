@@ -4,7 +4,9 @@
 // Write your JavaScript code.
 
 let s_client = new signalR.HubConnectionBuilder().withUrl("/pmc").build();
-
+iziToast.settings({
+    theme: 'normalToast'
+})
 
 
 // SignalR Events
@@ -53,6 +55,7 @@ s_client.on("RefreshResolver", (resolvers) => {
     tempResolvers.forEach((resolver) => {
         resolverTree.add(resolver)
     });
+
 });
 
 let FormHtml = []
@@ -65,7 +68,7 @@ s_client.on("RefreshFormsList", (Forms) => {
     let formList = $(".list-group")
     formList.empty();
     Forms.forEach((form) => {
-        let listItem = `<li class="list-group-item" data-id="${FormIndex}">${form.title}</li>`
+        let listItem = `<li class="list-group-item " data-id="${FormIndex}">${form.title} <i class="fi-xnsuxl-network-solid"></i> </li>`
         FormHtml.push(`${form.html}`)
         formList.prepend(listItem);
         FormIndex++;
@@ -81,18 +84,17 @@ s_client.on("RefreshFormsList", (Forms) => {
 })
 
 s_client.on("MqttConnected", (result) => {
-    iziToast.show({
-        theme: 'light',
+    iziToast.success({
         title: 'MQTT',
         message: result,
-        backgroundColor: 'green',
-        icon:'fi-xnluxl-network'
-        
     })
 })
 
 s_client.on("MqttDisconnected", (result) => {
-    console.log(result);
+    iziToast.error({
+        title: 'MQTT',
+        message: result,
+    })
 })
 
 

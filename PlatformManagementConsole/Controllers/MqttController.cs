@@ -39,6 +39,7 @@ namespace PlatformManagementConsole.Controllers
         private int MQTT_Port = 8080;
         private float MQTT_KeepAlive = 10.0f;
         private const string RESOLVER_INIT = "cmsb2/resolver/init";
+        private const string RESOLVER_CLIENT_FORMS = "cmsb4/resolver/forms";
 
 
         
@@ -91,8 +92,29 @@ namespace PlatformManagementConsole.Controllers
             }
         }
 
+        
+        [HttpPost]
+        [Route("SendForm")]
+        public async Task<HttpResponseMessage> MqttSendForm([FromBody] JArray formJson)
+        {
+            if (Client.IsConnected)
+            {
+                var msg = new MqttApplicationMessageBuilder()
+                    .WithTopic(RESOLVER_CLIENT_FORMS)
+                    .WithPayload(Encoding.ASCII.GetBytes(formJson.ToString()))
+                    .WithExactlyOnceQoS()
+                    .Build();
 
-
+                await Client.PublishAsync(msg);
+                return new HttpResponseMessage(HttpStatusCode.OK);
+            }
+            else
+            {
+                await _hubContext.Clients.All.SendAsync("MqttNoConnection", "Mqtt Not Connected");
+                return new HttpResponseMessage(HttpStatusCode.InternalServerError);
+            }
+        }
+        
         private async Task MqttConfigStart(String MQTT_IP, int MQTT_Port, Double MQTT_KeepAlive)
         {
 
@@ -130,7 +152,7 @@ namespace PlatformManagementConsole.Controllers
             {
                 string result = string.Format("Connected to MQTT broker with result code {0}", e.AuthenticateResult.ResultCode);
 
-                await Client.SubscribeAsync("cmsb/#");
+                await Client.SubscribeAsync("cmsb4/#");
                 await Client.SubscribeAsync("cmsb2/#");
                 await _hubContext.Clients.All.SendAsync("MqttConnected", result);
             });

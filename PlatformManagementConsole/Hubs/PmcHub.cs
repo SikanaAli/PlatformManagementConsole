@@ -15,10 +15,7 @@ namespace PlatformManagementConsole.Hubs
     {
         //private static IHubContext hubContext = GlobalHost.ConnectionManager.GetHubContext<PmcHub>();
 
-        public async Task SendMessage(string user, string message)
-        {
-            await Clients.All.SendAsync("ReceiveMessage", user, message);
-        }
+
 
         public class clientResolver
         {
@@ -37,29 +34,37 @@ namespace PlatformManagementConsole.Hubs
 
         public async Task RefreshResolvers()
         {
-            using(var db = new PmcDbContext())
+            try
             {
-                
-
-                var ResolverList = db.Resolvers.ToList();
-                List<clientResolver> clientResolvers = new List<clientResolver>();
-
-                foreach (var Reoslver in ResolverList)
+                using (var db = new PmcDbContext())
                 {
-                    clientResolvers.Add(new clientResolver
-                    {
-                        Id = Reoslver.Guid,
-                        Text = Reoslver.Name,
-                        DeviceType = Reoslver.DeviceType,
-                        Platform = Reoslver.Platform,
-                        OsVersion = Reoslver.OsVersion,
-                        OEM = Reoslver.OEM,
-                        Model = Reoslver.Model,
-                        IsOnline = Reoslver.IsOnline
 
-                    });
+
+                    var ResolverList = db.Resolvers.ToList();
+                    List<clientResolver> clientResolvers = new List<clientResolver>();
+
+                    foreach (var Reoslver in ResolverList)
+                    {
+                        clientResolvers.Add(new clientResolver
+                        {
+                            Id = Reoslver.Guid,
+                            Text = Reoslver.Name,
+                            DeviceType = Reoslver.DeviceType,
+                            Platform = Reoslver.Platform,
+                            OsVersion = Reoslver.OsVersion,
+                            OEM = Reoslver.OEM,
+                            Model = Reoslver.Model,
+                            IsOnline = Reoslver.IsOnline
+
+                        });
+                    }
+                    await Clients.All.SendAsync("RefreshResolver", clientResolvers);
                 }
-                await Clients.All.SendAsync("RefreshResolver", clientResolvers);
+            }
+            catch (Exception)
+            {
+
+                throw;
             }
         }
 

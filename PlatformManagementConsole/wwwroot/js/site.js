@@ -35,7 +35,8 @@
             if (childNodesLength === 1) {
                 childNodes = e.childNodes;
                 childNodeObj.Name = "Title"
-                childNodeObj.Title = childNodes[0].textContent
+                childNodeObj.Label = childNodes[0].textContent
+                childNodeObj.InputType = "Label"
                 jsonToSend.push(childNodeObj)
 
             } else {
@@ -47,7 +48,7 @@
 
                     switch (node.nodeName) {
                         case "LABEL":
-                            childNodeObj.Lable = node.textContent
+                            childNodeObj.Label = node.textContent
                             break;
                         case "INPUT":
                             childNodeObj.Name = $(node).attr("name")
@@ -61,13 +62,17 @@
                             childNodeObj.InputType = "Editor"
                             childNodeObj.Required = $(node).attr("required") ? true : false;
                             break;
-                        case "SELECT":
+                        case "SELECT": 
                             childNodeObj.Name = $(node).attr("name")
                             childNodeObj.InputType = "Select"
-                            childNodeObj.Options = []
+                            
+
+
+                                let opt = []
                             for (var i = 0; i < $(node)[0].options.length; i++) {
-                                childNodeObj.Options.push($(node)[0].options[i].label)
+                                opt.push($(node)[0].options[i].label)
                             }
+                            childNodeObj.Options = opt
                             break;
                         case "DIV":
                             if ($(node).children("label :input").attr("type") == "radio" || "RADIO") {
@@ -103,7 +108,25 @@
 
 
         })
-
         console.log(jsonToSend)
+        $.ajax({
+            method: "POST",
+            url: "/api/Mqtt/SendForm",
+            contentType: "application/json; UTF8",
+            data: JSON.stringify(jsonToSend),
+            success: (response) => {
+                iziToast.show({
+                    title: "Form Submition",
+                    message: response.responsePhrase
+                })
+            },
+            error: (response) => {
+                iziToast.show({
+                    title: "Form Submition",
+                    message: "Error"
+                })
+            }
+        })
+       
     })
 }
