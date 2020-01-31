@@ -35,11 +35,12 @@ namespace PlatformManagementConsole.Controllers
 
 
         private static IMqttClient Client = new MqttFactory().CreateMqttClient();
-        private string MQTT_IP = "test.mosquitto.org";
-        private int MQTT_Port = 8080;
+        private string MQTT_IP = "broker.hivemq.com";
+        private int MQTT_Port = 1883;
         private float MQTT_KeepAlive = 10.0f;
-        private const string RESOLVER_INIT = "cmsb2/resolver/init";
-        private const string RESOLVER_CLIENT_FORMS = "cmsb4/resolver/forms";
+        private const string RESOLVER_INIT = "cmsb/resolver/init";
+        private const string RESOLVER_CLIENT_FORMS = "cmsb/resolver/forms";
+        private const string RESOLVER_LAST_WILL = "cmsb/resolver/lw";
 
 
         
@@ -120,7 +121,7 @@ namespace PlatformManagementConsole.Controllers
 
             var MqttOptions = new MqttClientOptionsBuilder()
             .WithClientId(Guid.NewGuid().ToString())
-            .WithWebSocketServer(string.Format("{0}:{1}", MQTT_IP, MQTT_Port))
+            .WithTcpServer(MQTT_IP,MQTT_Port)
             .WithKeepAliveSendInterval(System.TimeSpan.FromSeconds(MQTT_KeepAlive))
             .WithCleanSession()
             .Build();
@@ -135,13 +136,32 @@ namespace PlatformManagementConsole.Controllers
                 {
                     case RESOLVER_INIT:
                         string payload = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+                        Console.WriteLine("Adding Resolver");
                         await AddResolver(payload);
                         break;
                     case "cmsb/resolver/status":
                         break;
+                    case RESOLVER_LAST_WILL:
+                        var id = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+
+                        using(var db = new PmcDbContext())
+                        {
+                            if (db.Resolvers.Count((item) => item.Guid == id)  == 1)
+                            {
+                                Console.WriteLine("LAST WILL ID {0}", id);
+                                var row = db.Resolvers.Where(item => item.Guid == id).FirstOrDefault();
+
+                                db.Resolvers.Remove(row);
+                                db.SaveChanges();
+
+                                
+
+                                await _hubContext.Clients.All.SendAsync("RefreshResolver", id);
+                            }
+                        }
+                        break;
 
                     default:
-
                         await _hubContext.Clients.All.SendAsync("Undefined", e.ApplicationMessage);
                         break;
                 }
@@ -152,8 +172,8 @@ namespace PlatformManagementConsole.Controllers
             {
                 string result = string.Format("Connected to MQTT broker with result code {0}", e.AuthenticateResult.ResultCode);
 
-                await Client.SubscribeAsync("cmsb4/#");
-                await Client.SubscribeAsync("cmsb2/#");
+                await Client.SubscribeAsync("cmsb/#");
+                
                 await _hubContext.Clients.All.SendAsync("MqttConnected", result);
             });
 
@@ -193,26 +213,30 @@ namespace PlatformManagementConsole.Controllers
 
                     db.SaveChanges();
 
-                    var dbList = db.Resolvers.ToList();
-                    List<PmcHub.clientResolver> clientResolvers = new List<PmcHub.clientResolver>();
-
-                    foreach (var item in dbList)
-                    {
-                        clientResolvers.Add(new PmcHub.clientResolver
-                        {
-                            Id = item.Guid,
-                            Text = item.Name,
-                            DeviceType = item.DeviceType,
-                            Platform = item.Platform,
-                            OsVersion = item.OsVersion,
-                            OEM = item.OEM,
-                            Model = item.Model,
-                            IsOnline = item.IsOnline
-
-                        });
-                    }
-                    await _hubContext.Clients.All.SendAsync("RefreshResolver", clientResolvers);
+                    
                 }
+
+                var dbList = db.Resolvers.ToList();
+
+                var clientResolver = new List<PmcHub.clientResolver>();
+
+                foreach (var item in dbList)
+                {
+                    clientResolver.Add(new PmcHub.clientResolver {
+                        Id = item.Guid,
+                        Text = item.Name,
+                        DeviceType = item.DeviceType,
+                        Platform = item.Platform,
+                        OsVersion = item.OsVersion,
+                        OEM = item.OEM,
+                        Model = item.Model,
+                        IsOnline = item.IsOnline
+
+                    });
+                }
+                
+
+                await _hubContext.Clients.All.SendAsync("AddResolver", clientResolver);
             }
         }
 

@@ -446,7 +446,7 @@ $(document).ready(function () {
 
     /*FORM BUILDER End */
 
-
+    
     //Check if Form title has been added or removed
     let preview_el = document.querySelector(".preview")
 

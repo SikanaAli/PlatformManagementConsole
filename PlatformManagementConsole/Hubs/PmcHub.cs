@@ -58,7 +58,7 @@ namespace PlatformManagementConsole.Hubs
 
                         });
                     }
-                    await Clients.All.SendAsync("RefreshResolver", clientResolvers);
+                    await Clients.All.SendAsync("AddResolver", clientResolvers);
                 }
             }
             catch (Exception)

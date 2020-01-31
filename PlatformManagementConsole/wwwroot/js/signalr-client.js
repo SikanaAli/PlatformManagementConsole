@@ -33,28 +33,46 @@ s_client.on("Undefined", (data) => {
 
 
 s_client.on("AddResolver", (resolver) => {
-    resolvers.push(resolvers[0])
-})
-
-s_client.on("RefreshResolver", (resolvers) => {
-
+    console.log("Resolvers",resolver)
     let tempResolvers = []
-    resolvers.forEach((row) => {
-        
+    resolver.forEach((row) => {
+
         let { text, id } = row
 
-        
+
         tempResolvers.push({
-            label: `${text}`,
+            label: text,
             id,
             parent: "resolver-p"
         });
     });
     $("ul .vtree-subtree").remove()
-    childResolvers = tempResolvers;
-    tempResolvers.forEach((resolver) => {
-        resolverTree.add(resolver)
-    });
+    tempResolvers.forEach((item) => {
+        resolverTree.add(item)
+    })
+    
+})
+
+s_client.on("RefreshResolver", (id) => {
+    console.log(id)
+    //let tempResolvers = []
+    //resolvers.forEach((row) => {
+        
+    //    let { text, id } = row
+
+        
+    //    tempResolvers.push({
+    //        label: text,
+    //        id,
+    //        parent: "resolver-p"
+    //    });
+    //});
+    //$("ul .vtree-subtree").remove()
+
+    //tempResolvers
+
+    //resolverFunc(tempResolvers);
+    resolverTree.remove(id)
 
 });
 

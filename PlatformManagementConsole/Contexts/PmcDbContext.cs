@@ -11,7 +11,7 @@ namespace PlatformManagementConsole.Contexts
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
-            options.UseSqlite("Data Source=connectedDevices.db");
+            options.UseSqlite("Filename=connectedDevices.db");
         }
     }
 }

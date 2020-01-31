@@ -1,7 +1,7 @@
 ﻿
 
-let ResolverContainer = [{ "label": "Resolvers", "id": "resolver-p" }]
-let childResolvers = []
+let ResolverParent = { "label": "Smart Soft Devices", "id": "resolver-p" }
+
 const ResolverTreeOptions = {
     placeholder: "No Resolvers",
     contextmenu: [{
@@ -19,10 +19,18 @@ const ResolverTreeOptions = {
 }
 
 const resolverTree = new VanillaTree("#resolvers", ResolverTreeOptions) 
+resolverTree.add(ResolverParent)
 
+const resolverFunc = (childResolvers) => {
+    
+    if (childResolvers.length !== 0) {
+        childResolvers.forEach((row) => {
+            resolverTree.add(row);
+        })
+    }
+}
 
-ResolverContainer.forEach((row) => {
-    resolverTree.add(row);
-})
+resolverFunc([]);
+    
 
 

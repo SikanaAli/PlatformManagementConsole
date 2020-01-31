@@ -3,5 +3,90 @@
     ViewData["Title"] = "Message";
 }
 
-<h1>Message</h1>
+@section Scripts{
+    <script src="~/js/messagePageHandler.js"></script>
+}
+
+
+<ul class="nav nav-tabs justify-content-center" id="myTab" role="tablist">
+    <li class="nav-item">
+        <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Message Creator</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Viewer</a>
+    </li>
+</ul>
+
+<div class="p-2" id="msg-bg" style="height: calc(100% - 42px)">
+
+    <div class="tab-content h-100" id="myTabContent">
+        <div class="tab-pane fade h-100 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+            <div class="row h-100">
+                <div class="col-md-6 border-right h-100">
+                    <div class="form-group">
+                        <label>
+                            @*<i class="fi-xtllxl-spreadsheet-thin"></i>*@
+                            <span class="msg-format-icon"></span>
+                            Message Format
+                        </label>
+                        <select class=" form-control " id="msg-format" name="msgstyle">
+                            <option value="0">
+                                With Full Length Image
+                            </option>
+                            <option value="1">
+                                With Side Image
+                            </option>
+                            <option value="2">
+                                With No Image
+                            </option>
+                        </select>
+                    </div>
+                    <div class="p-2">
+                        <hr />
+                    </div>
+                    
+                    <div class="border rounded p-lg-5 bg-light">
+                        <p id="msg-legend" class="bg-light">Message Details</p>
+                        <div class="form-group">
+                            <lable>Message Image</lable>
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" id="customFile">
+                                <label class="custom-file-label" for="customFile">Choose file</label>
+                            </div>
+
+                        </div>
+                        <div class="form-group">
+                            <label>Message Title</label>
+                            <input type="text" value="" placeholder="Message Title" class="form-control" name="msgTitle" id="msg-title" />
+                        </div>
+                        <div class="form-group">
+                            <label>Message Body </label>
+                            <textarea class="form-control" id="msg-body" name="msgBody"></textarea>
+                        </div>
+                        <div>
+                            <label>Message Expiry Date</label>
+                            <input type="datetime-local" value="" name="msgExpiry" class="form-control" id="msg-expiry" />
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-12 border h-100" id="msg-preview" >
+                    <div class="msg-container">
+                        <div class="card" id="card" >
+                            <div class="img-square-wrapper" id="msg-image-view">
+                                <img class="card-img-top"  src="https://via.placeholder.com/250x100.png?text=250x100+image+size" alt="Message Image">
+                            </div>
+                            
+                            <div class="card-body" id="card-body">
+                                <h4 class="card-title" id="card-title">Message Title</h4>
+                                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+    </div>
+</div>
+
 

@@ -126,3 +126,45 @@ body {
     background: linear-gradient(to right, #6dd5ed,#2193b0) !important
 }
 
+
+/*Message Page*/
+#msg-preview{
+    box-shadow: 0 0 10px 1px rgba(0,0,0,0.2) inset;
+}
+
+#msg-preview {
+    background-color: rgba(65, 65, 65, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#msg-preview >div{
+    width: 50%;
+}
+.msg-container {
+    /*position: relative;
+    display: block;
+    margin: auto !important;
+    top: 25%;
+    border-radius: 10px;*/
+    
+
+    box-shadow: 0 0 10px 1px rgba(0,0,0,0.3)
+}
+.msg-container>div{
+     
+}
+.card-horizontal {
+    display: flex;
+    flex: 1 1 auto;
+}
+.card-text {
+    white-space: pre-wrap;
+}
+
+#msg-legend{
+    margin-top: -61px;
+    width: fit-content
+
+}
+

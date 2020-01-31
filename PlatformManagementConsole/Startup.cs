@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PlatformManagementConsole.Hubs;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using PlatformManagementConsole.Contexts;
 
 namespace PlatformManagementConsole
 {
@@ -36,6 +37,7 @@ namespace PlatformManagementConsole
 
             services.AddSignalR();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddEntityFrameworkSqlite().AddDbContext<PmcDbContext>();
             
         }
 
@@ -49,6 +51,12 @@ namespace PlatformManagementConsole
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+            }
+
+            using (var db = new PmcDbContext())
+            {
+                db.Database.EnsureCreated();
+                db.Database.Migrate();
             }
 
             app.UseStaticFiles();
