@@ -1,15 +1,28 @@
 
 
+
 $(document).ready(function () {
     
 
-    /*FORM BUILDER Start*/
-    $(".form_bal_titlefeild").draggable({
+/*FORM BUILDER Start*/
+    $(".form_bal_banner").draggable({
         helper: function () {
-            return getTitleFeildHtml();
+            return getBannerFieldHTML();
         },
         connectToSortable: ".form_builder_area"
     });
+    $(".form_bal_titlefeild").draggable({
+        helper: function () {
+            return getTitleFieldHTML();
+        },
+        connectToSortable: ".form_builder_area"
+    });
+    $(".from_bal_text").draggable({
+        helper: function () {
+            return getTextHTML();
+        },
+        connectToSortable: ".form_builder_area"
+    })
     $(".form_bal_textfield").draggable({
         helper: function () {
             return getTextFieldHTML();
@@ -83,10 +96,24 @@ $(document).ready(function () {
     });
     $(".form_builder_area").disableSelection();
 
-    function getTitleFeildHtml() {
-        var field = generateField()
+
+    function getBannerFieldHTML() {
+        var field = generateField();
+        //var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="title" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Form Title" data-field="' + field + '" /></div></div></div>'
+
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="banner" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="file" name="label_' + field + '" class=" form_input_file" value="Form Title" data-field="' + field + '" /></div></div> </div>';
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
+    }
+
+    function getTitleFieldHTML() {
+        var field = generateField();
         var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="title" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Form Title" data-field="' + field + '" /></div></div></div>'
         return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
+    }
+    function getTextHTML() {
+        var field = generateField();
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="date" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Label" data-field="' + field + '"/></div></div><div class="col-md-12"><div class="form-group"><input type="text" name="text_' + field + '" class="form-control form_input_name" placeholder="Name"/></div></div><div class="col-md-12"><div class="form-check"><label class="form-check-label"><input data-field="' + field + '" type="checkbox" class="form-check-input form_input_req">Required</label></div></div></div>';
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html)
     }
 
     function getButtonFieldHTML() {
@@ -295,6 +322,10 @@ $(document).ready(function () {
     $(document).on('keyup', '.form_input_button_value', function () {
         getPreview();
     });
+    $(document).on('change', '.form_input_file', function () {
+        console.log("changed")
+        getPreview();
+    });
     $(document).on('change', '.form_input_req', function () {
         getPreview();
     });
@@ -310,15 +341,43 @@ $(document).ready(function () {
     function generateField() {
         return Math.floor(Math.random() * (100000 - 1 + 1) + 57);
     }
+
     function getPreview(plain_html = '') {
         var el = $('.form_builder_area .form_output');
         var html = '';
         el.each(function () {
             var data_type = $(this).attr('data-type');
-            //var field = $(this).attr('data-field');
+            var field = $(this).attr('data-field');
             var label = $(this).find('.form_input_label').val();
             var name = $(this).find('.form_input_name').val();
+            if (data_type === 'banner') {
 
+                
+
+                let imgSrc;
+                console.log($(this).children("div").children("div").children("input"))
+                if ($(this).children("div").children("div").children("input")[0].files.length === 1) {
+                    let file = $(this).children("div").children("div").children("input")[0].files[0]
+
+                    
+                    console.log(1)
+                    
+                    let reader = new FileReader();
+                    reader.onload = (e) => {
+                        console.log(e.target.result);
+                        $(`[data-img-id="${field}"]`).attr("src", e.target.result);
+                    }
+
+                    reader.readAsDataURL(file);
+                     
+
+                    console.log(3)
+                } else {
+                    imgSrc = "https://via.placeholder.com/250x100.png?text=250x100+image+size"
+                }
+                let banner = '<div  class="form-group"><img data-img-id="' + field + '" src="' + imgSrc + '" style="width:100%;height:10rem"/></div>'
+                return html += banner;
+            }
             if (data_type === 'title') {
                 return html += '<div id="title-mutation" class="form-group text-center"><h3>'+ label +'</h3></div>'
             }

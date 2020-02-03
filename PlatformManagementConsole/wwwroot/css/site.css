@@ -81,6 +81,8 @@ body {
     background-color: #F5F5F5;
 }
 
+
+
 .left-sidebar::-webkit-scrollbar {
     width: 12px;
     background-color: #F5F5F5;
@@ -157,6 +159,7 @@ body {
 .card-horizontal {
     display: flex;
     flex: 1 1 auto;
+
 }
 .card-text {
     white-space: pre-wrap;
@@ -164,7 +167,17 @@ body {
 
 #msg-legend{
     margin-top: -61px;
-    width: fit-content
+    width: fit-content;
 
 }
 
+
+/*SSD(Smart Soft Deveices)*/
+
+.isOnline{
+    color: green;
+}
+
+.isOffline{
+    color: lightgray;
+}

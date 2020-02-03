@@ -37,42 +37,52 @@ s_client.on("AddResolver", (resolver) => {
     let tempResolvers = []
     resolver.forEach((row) => {
 
-        let { text, id } = row
+        let { text, id, isOnline } = row
 
-
+        //console.log(isOnline);
         tempResolvers.push({
             label: text,
             id,
+            isOnline,
             parent: "resolver-p"
         });
     });
     $("ul .vtree-subtree").remove()
     tempResolvers.forEach((item) => {
-        resolverTree.add(item)
+        
+        if (item.isOnline == true) {
+            delete (item.isOnline)
+            resolverTree.add(item)
+
+            let leaf = `[data-vtree-id="${item.id}"]`
+            console.log(leaf);
+            $(leaf).children("a").append("<i class='fa fa-circle isOnline pl-2'></i>")
+        } else {
+            delete (item.isOnline)
+            resolverTree.add(item)
+            let leaf = `[data-vtree-id="${item.id}"]`
+            console.log(leaf);
+            $(leaf).children("a").append("<i class='fa fa-circle isOffline pl-2'></i>")
+        }
+        
     })
     
 })
 
-s_client.on("RefreshResolver", (id) => {
-    console.log(id)
-    //let tempResolvers = []
-    //resolvers.forEach((row) => {
-        
-    //    let { text, id } = row
+s_client.on("ssdStatus", (data) => {
+    console.log(data)
+    data = JSON.parse(data)
 
-        
-    //    tempResolvers.push({
-    //        label: text,
-    //        id,
-    //        parent: "resolver-p"
-    //    });
-    //});
-    //$("ul .vtree-subtree").remove()
+    if (data.hasOwnProperty("isOnline") && data.isOnline) {
+        let leaf = `[data-vtree-id="${data.id}"]`
+        $(leaf).children("a").children("i").removeClass("isOffline");
+        $(leaf).children("a").children("i").addClass("isOnline");
+    } else {
+        let leaf = `[data-vtree-id="${data.id}"]`
+        $(leaf).children("a").children("i").removeClass("isOnline");
+        $(leaf).children("a").children("i").addClass("isOffline");
+    }
 
-    //tempResolvers
-
-    //resolverFunc(tempResolvers);
-    resolverTree.remove(id)
 
 });
 
