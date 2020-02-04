@@ -17,6 +17,13 @@ $(document).ready(function () {
         },
         connectToSortable: ".form_builder_area"
     });
+    $(".form_bal_listgroup").draggable({
+        helper: function () {
+            return getListGroupHTML();
+        },
+        connectToSortable: ".form_builder_area"
+        
+    })
     $(".from_bal_text").draggable({
         helper: function () {
             return getTextHTML();
@@ -99,9 +106,14 @@ $(document).ready(function () {
 
     function getBannerFieldHTML() {
         var field = generateField();
-        //var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="title" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Form Title" data-field="' + field + '" /></div></div></div>'
-
         var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="banner" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="file" name="label_' + field + '" class=" form_input_file" value="Form Title" data-field="' + field + '" /></div></div> </div>';
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
+    }
+
+    function getListGroupHTML() {
+        var field = generateField();
+        var opt1 = generateField();
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div><hr/><div class="row li_row form_output" data-type="listGroup" data-field="' + field + '"><div class="row li_row"><div class="col-md-12"><div class="field_extra_info_' + field + '"><div data-field="' + field + '" class="row listgroupMargin listgroup_row_' + field + '" data-opt="' + opt1 + '"><div class="col-md-8"><div class="form-group"><input type="text" value="Option" class="l_lable form-control"/></div></div><div class="col-md-4"><i class="margin-top-5 fa fa-plus-circle fa-2x default_blue add_more_listitem" data-field="' + field + '"></i></div></div></div></div></div></div></div>';
         return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
     }
 
@@ -169,6 +181,17 @@ $(document).ready(function () {
         var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div><hr/><div class="row li_row form_output" data-type="checkbox" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Label" data-field="' + field + '"/></div></div><div class="col-md-12"><div class="form-group"><input type="text" name="text_' + field + '" class="form-control form_input_name" placeholder="Name"/></div></div><div class="col-md-12"><div class="form-group"><div class="mt-checkbox-list checkbox_list_' + field + '"><label class="mt-checkbox mt-checkbox-outline"><input data-opt="' + opt1 + '" type="checkbox" name="checkbox_' + field + '" value="Value"> <p class="c_opt_name_' + opt1 + '">Option</p><span></span></label></div></div></div></div><div class="row li_row"><div class="col-md-12"><div class="field_extra_info_' + field + '"><div data-field="' + field + '" class="row checkbox_row_' + field + '" data-opt="' + opt1 + '"><div class="col-md-4"><div class="form-group"><input type="text" value="Option" class="c_opt form-control"/></div></div><div class="col-md-4"><div class="form-group"><input type="text" value="Value" class="c_val form-control"/></div></div><div class="col-md-4"><i class="margin-top-5 fa fa-plus-circle fa-2x default_blue add_more_checkbox" data-field="' + field + '"></i></div></div></div></div></div></div>';
         return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
     }
+
+
+    $(document).on('click', '.add_more_listitem', function () {
+        $(this).closest('.form_builder_field').css('height', 'auto');
+        var field = $(this).attr('data-field');
+        var option = generateField();
+        var list_group_item = '';
+        $('.field_extra_info_' + field).append('<div data-field="' + field + '" class="row listgroupMargin listgroup_row_' + field + '" data-opt="' + option + '"><div class="col-md-8"><div class="form-group"><input type="text" value="Option" class="l_lable form-control"/></div></div><div class="col-md-4"><i class="margin-top-5 fa fa-plus-circle fa-2x default_blue add_more_listitem" data-field="' + field + '"></i><i class="margin-top-5 margin-left-5 fa fa-times-circle default_red fa-2x remove_more_listitem" data-field="' + field + '"></i></div></div>');
+
+        getPreview();
+    })
 
     $(document).on('click', '.add_more_select', function () {
         $(this).closest('.form_builder_field').css('height', 'auto');
@@ -271,6 +294,15 @@ $(document).ready(function () {
             getPreview();
         });
     });
+    $(document).on('click', '.remove_more_listitem', function () {
+        var field = $(this).attr('data-field');
+        console.log("b4 remove f=> "+field);
+        $(this).closest('.listgroup_row_' + field).hide('400', function () {
+            $(this).remove();
+            getPreview();
+            console.log("af remove");
+        });
+    });
     $(document).on('click', '.remove_more_select', function () {
         var field = $(this).attr('data-field');
         $(this).closest('.select_row_' + field).hide('400', function () {
@@ -351,27 +383,15 @@ $(document).ready(function () {
             var label = $(this).find('.form_input_label').val();
             var name = $(this).find('.form_input_name').val();
             if (data_type === 'banner') {
-
-                
-
                 let imgSrc;
-                console.log($(this).children("div").children("div").children("input"))
                 if ($(this).children("div").children("div").children("input")[0].files.length === 1) {
-                    let file = $(this).children("div").children("div").children("input")[0].files[0]
-
-                    
-                    console.log(1)
-                    
+                    let file = $(this).children("div").children("div").children("input")[0].files[0];
                     let reader = new FileReader();
                     reader.onload = (e) => {
                         console.log(e.target.result);
                         $(`[data-img-id="${field}"]`).attr("src", e.target.result);
                     }
-
                     reader.readAsDataURL(file);
-                     
-
-                    console.log(3)
                 } else {
                     imgSrc = "https://via.placeholder.com/250x100.png?text=250x100+image+size"
                 }
@@ -380,6 +400,14 @@ $(document).ready(function () {
             }
             if (data_type === 'title') {
                 return html += '<div id="title-mutation" class="form-group text-center"><h3>'+ label +'</h3></div>'
+            }
+            if (data_type === 'listGroup') {
+                var list_group_items = '';
+                $('.listgroup_row_' + field).each(function () {
+
+                    list_group_items += '<li class="list-group-item justify-content-between align-items-center">' + $(this).find("input[type=text]").val() + ' <input type="text" class="form-control" /></li>'
+                })
+                return html+= '<div class="form-group"><ul class="list-group">' + list_group_items + '</ul></div>';
             }
             if (data_type === 'text') {
                 var placeholder = $(this).find('.form_input_placeholder').val();

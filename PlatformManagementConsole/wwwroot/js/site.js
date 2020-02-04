@@ -108,7 +108,7 @@
 
 
         })
-        console.log(jsonToSend)
+        console.log(JSON.stringify(jsonToSend))
         $.ajax({
             method: "POST",
             url: "/api/Mqtt/SendForm",

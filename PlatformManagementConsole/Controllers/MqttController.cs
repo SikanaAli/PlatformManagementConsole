@@ -100,6 +100,7 @@ namespace PlatformManagementConsole.Controllers
         {
             if (Client.IsConnected)
             {
+                Console.WriteLine($"\"{formJson.ToString().Replace('"','\'')}\"");
                 var msg = new MqttApplicationMessageBuilder()
                     .WithTopic(RESOLVER_CLIENT_FORMS)
                     .WithPayload(Encoding.ASCII.GetBytes(formJson.ToString()))
