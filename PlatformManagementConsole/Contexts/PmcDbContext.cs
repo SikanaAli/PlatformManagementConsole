@@ -8,6 +8,8 @@ namespace PlatformManagementConsole.Contexts
     {
         public DbSet<Resolver> Resolvers { get; set; }
         public DbSet<Forms> Forms { get; set; }
+        public DbSet<Session> Sessions { get; set; }
+        public DbSet<Message> Messages { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {

@@ -127,8 +127,6 @@ namespace PlatformManagementConsole.Controllers
             .WithCleanSession()
             .Build();
 
-            
-
             Client.UseApplicationMessageReceivedHandler(async e =>
             {
                 string topic = e.ApplicationMessage.Topic;
@@ -147,7 +145,6 @@ namespace PlatformManagementConsole.Controllers
                         
                         using(var db = new PmcDbContext())
                         {
-                            
                             Console.WriteLine("Last will");
                             if (db.Resolvers.Count((item) => item.Guid == id)  == 1)
                             {

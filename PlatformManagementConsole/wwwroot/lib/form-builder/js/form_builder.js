@@ -238,6 +238,11 @@ $(document).ready(function () {
         $('.checkbox_list_' + field).html(options);
         getPreview();
     });
+
+    $(document).on('keyup', '.l_lable', function () {
+        getPreview();
+    });
+
     $(document).on('keyup', '.s_opt', function () {
         var op_val = $(this).val();
         var field = $(this).closest('.row').attr('data-field');
@@ -405,7 +410,7 @@ $(document).ready(function () {
                 var list_group_items = '';
                 $('.listgroup_row_' + field).each(function () {
 
-                    list_group_items += '<li class="list-group-item justify-content-between align-items-center">' + $(this).find("input[type=text]").val() + ' <input type="text" class="form-control" /></li>'
+                    list_group_items += '<li class="list-group-item d-flex justify-content-between align-items-center">' + $(this).find("input[type=text]").val() + ' <input type="text" class="ml-4 form-control form-control-sm" /></li>'
                 })
                 return html+= '<div class="form-group"><ul class="list-group">' + list_group_items + '</ul></div>';
             }

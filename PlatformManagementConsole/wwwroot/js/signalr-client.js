@@ -14,6 +14,7 @@ s_client.start().then(function () {
     console.log("Connected to SignalR")
     s_client.invoke("RefreshResolvers");
     s_client.invoke("RefreshFormsList");
+    s_client.invoke("GetSessions");
 }).catch(function (err) {
     return console.error(err.toString());
     });
@@ -124,7 +125,19 @@ s_client.on("MqttDisconnected", (result) => {
         message: result,
     })
 })
+//Session
+let Sessions = [];
+s_client.on("Sessions", (result) => {
+    Sessions = result;
+    console.log(Sessions);
+})
 
+s_client.on("SessionAdded", (result) => {
+    iziToast.success({
+        title: "Event Session",
+        message: result
+    })
+})
 
 //Click Events
 

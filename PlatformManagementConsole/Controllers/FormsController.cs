@@ -45,12 +45,31 @@ namespace PlatformManagementConsole.Controllers
             return "value";
         }
 
+        [HttpPost]
+        [Route("AddSession")]
+        public async Task<HttpResponseMessage> AddSession([FromBody] JObject form)
+        {
+            if(form.GetValue("SessionName").ToString() != string.Empty)
+            {
+                using(var db = new PmcDbContext())
+                {
+                    db.Sessions.Add(new Session
+                    {
+                        session_name = form.GetValue("SessionName").ToString()
+                    });
+                    db.SaveChanges();
+                    await _hubContext.Clients.All.SendAsync("SessionAdded", "Session Added");
+                }
+            }
+            await _hubContext.Clients.All.SendAsync("undefined", form.GetValue("SessionName").ToString());
+            return new HttpResponseMessage(HttpStatusCode.OK);
+        }
+
+
         // POST: api/Forms
         [HttpPost]
         public async Task<HttpResponseMessage> Post([FromBody] JObject form)
         {
-            
-
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
 
             if (form.GetValue("Title").ToString() != (string.Empty) )
