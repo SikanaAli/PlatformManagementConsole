@@ -13,8 +13,9 @@ namespace PlatformManagementConsole.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(nullable: true),
-                    Html = table.Column<string>(nullable: true)
+                    Title = table.Column<string>(nullable: false),
+                    Html = table.Column<string>(nullable: false),
+                    JsonForm = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,11 +28,11 @@ namespace PlatformManagementConsole.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Image = table.Column<string>(nullable: true),
-                    Title = table.Column<string>(nullable: true),
-                    Content = table.Column<string>(nullable: true),
-                    Link = table.Column<string>(nullable: true),
-                    LinkTitle = table.Column<string>(nullable: true),
+                    Image = table.Column<string>(nullable: false),
+                    Title = table.Column<string>(nullable: false),
+                    Content = table.Column<string>(nullable: false),
+                    Link = table.Column<string>(nullable: false),
+                    LinkTitle = table.Column<string>(nullable: false),
                     LinkType = table.Column<int>(nullable: false),
                     MsgFormat = table.Column<int>(nullable: false),
                     MsgExp = table.Column<DateTime>(nullable: false)
@@ -47,13 +48,13 @@ namespace PlatformManagementConsole.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Guid = table.Column<string>(nullable: true),
-                    Name = table.Column<string>(nullable: true),
-                    DeviceType = table.Column<string>(nullable: true),
-                    Platform = table.Column<string>(nullable: true),
-                    OsVersion = table.Column<string>(nullable: true),
-                    OEM = table.Column<string>(nullable: true),
-                    Model = table.Column<string>(nullable: true),
+                    Guid = table.Column<string>(nullable: false),
+                    Name = table.Column<string>(nullable: false),
+                    DeviceType = table.Column<string>(nullable: false),
+                    Platform = table.Column<string>(nullable: false),
+                    OsVersion = table.Column<string>(nullable: false),
+                    OEM = table.Column<string>(nullable: false),
+                    Model = table.Column<string>(nullable: false),
                     IsOnline = table.Column<bool>(nullable: false)
                 },
                 constraints: table =>
@@ -67,7 +68,7 @@ namespace PlatformManagementConsole.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    session_name = table.Column<string>(nullable: true)
+                    session_name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {

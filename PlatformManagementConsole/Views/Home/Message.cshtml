@@ -46,9 +46,8 @@
                     </div>
                     
                     <div class="border rounded p-lg-5 bg-light">
-                        <p id="msg-legend" class="bg-light">Message Details</p>
                         <div class="form-group">
-                            <lable>Message Image</lable>
+                            <lable><i class="fi-xtluxl-file-thin"></i> Message Image</lable>
                             <div class="custom-file">
                                 <input type="file" class="custom-file-input" id="customFile">
                                 <label class="custom-file-label" for="customFile">Choose file</label>
@@ -56,15 +55,34 @@
 
                         </div>
                         <div class="form-group">
-                            <label>Message Title</label>
+                            <label> <i class="fi-xtluxl-label-thin"></i> Message Title</label>
                             <input type="text" value="" placeholder="Message Title" class="form-control" name="msgTitle" id="msg-title" />
                         </div>
                         <div class="form-group">
-                            <label>Message Body </label>
+                            <label> <i class="fi-stluxl-three-bars-thin"></i> Message Body</label>
                             <textarea class="form-control" id="msg-body" name="msgBody"></textarea>
                         </div>
+                        <div class=" form-group">
+                            <div class="mb-3">
+                                <label>Link Title</label>
+                                <input type="text" name="linkTitle" class="form-control" id="msg-link-title"/>
+                            </div>
+                            <div class="d-flex">
+                                <label>Link Type:</label>
+                                <span class="ml-2">
+                                    <select name="msgLinkSelect" id="msgLinkSelect" class="form-control form-control-sm">
+                                        <option value="0">Form</option>
+                                        <option value="1">Link</option>
+                                    </select>
+                                </span>
+                                
+                            </div>
+                            <div id="selectedLinkType">
+
+                            </div>
+                        </div>
                         <div>
-                            <label>Message Expiry Date</label>
+                            <label> <i class="fi-xtluxl-calendar-thin"></i>Message Expiry Date</label>
                             <input type="datetime-local" value="" name="msgExpiry" class="form-control" id="msg-expiry" />
                         </div>
                     </div>
@@ -79,7 +97,11 @@
                             <div class="card-body" id="card-body">
                                 <h4 class="card-title" id="card-title">Message Title</h4>
                                 <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                <div class="card-footer">
+                                    <small id="link-title">link title</small>
+                                </div>
                             </div>
+                            
                         </div>
                     </div>
                 </div>

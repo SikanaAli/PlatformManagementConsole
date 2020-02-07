@@ -9,7 +9,7 @@ using PlatformManagementConsole.Contexts;
 namespace PlatformManagementConsole.Migrations
 {
     [DbContext(typeof(PmcDbContext))]
-    [Migration("20200205065044_InitialCreate")]
+    [Migration("20200206081125_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -24,6 +24,8 @@ namespace PlatformManagementConsole.Migrations
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Html");
+
+                    b.Property<string>("JsonForm");
 
                     b.Property<string>("Title");
 

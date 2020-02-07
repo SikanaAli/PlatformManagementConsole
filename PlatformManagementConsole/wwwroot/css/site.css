@@ -159,15 +159,24 @@ body {
 .card-horizontal {
     display: flex;
     flex: 1 1 auto;
-
+    background-color: white;
 }
-.card-text {
-    white-space: pre-wrap;
-}
+    .card-horizontal .img-square-wrapper img{
+       height:100%;
+    }
+    .card-text {
+        white-space: pre-wrap;
+    }
 
 #msg-legend{
     margin-top: -61px;
     width: fit-content;
+}
+
+#link-title{
+    text-decoration:underline;
+    color: blue;
+    cursor:pointer
 
 }
 

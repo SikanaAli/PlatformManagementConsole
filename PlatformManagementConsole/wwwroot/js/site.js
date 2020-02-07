@@ -19,34 +19,83 @@
     };
 
 
-    $("#send-form-btn").click((e) => {
+    $(".export_html").click((e) => {
 
-        //$("#form-view .form-group").children().each((i, el) => {
-        //    console.log(el.nodeName, $(el).attr("type"))
+        //$(".preview").children(".form-group").each((i, el) => {
+        //    el.childNodes.forEach((node, key, parent) => {
+        //        if ($(node).hasClass("isTable")) {
+        //            console.log("Table found")
+        //        }
+        //        if (node.nodeName === 'UL') {
+        //            node.childNodes.forEach((node) => {
+        //                console.log($(node).html().toString())
+        //                if ($(node).html().toString().includes("select")) {
+        //                    console.log("SELE")
+        //                    console.log($(node))
+        //                } else if ($(node).html().toString().includes("input")) {
+        //                    console.log("IN")
+        //                    console.log($(node))
+        //                }
+        //            })
+        //        }
+        //        console.log(node.nodeName)
+        //    })
         //})
 
         const jsonToSend = [];
         e.preventDefault();
-        $("#form-view .form-group").each((i, e) => {
+        $(".preview .form-group").each((i, e) => {
             let childNodesLength = e.childNodes.length;
             let childNodes;
             let childNodeObj = {}
 
-            if (childNodesLength === 1) {
-                childNodes = e.childNodes;
-                childNodeObj.Name = "Title"
-                childNodeObj.Label = childNodes[0].textContent
-                childNodeObj.InputType = "Label"
-                jsonToSend.push(childNodeObj)
+            
+               
+                
 
-            } else {
+            
 
                 childNodeObj = {}
                 childNodes = e.childNodes
 
                 childNodes.forEach((node, i) => {
+                    let switchValue = node.nodeName
+                    switch (switchValue) {
+                        case "H3":
+                            childNodeObj.Name = "Title"
+                            childNodeObj.Label = childNodes[0].textContent
+                            childNodeObj.InputType = "Label"
+                            
+                            break;
+                        case "UL":
+                            childNodeObj.Name = "listgroup"
+                            childNodeObj.InputType = "Table"
+                            childNodeObj.RowArray = [];
+                            node.childNodes.forEach((child, key, parent) => {
+                                if ($(child).html().toString().includes("select")) {
+                                    let tempChild = $(child).children("select");
+                                    let opts = []
+                                    for (var i = 0; i < tempChild[0].options.length; i++) {
+                                        opts.push(tempChild[0].options[i].label);
+                                    }
+                                    console.log()
+                                    childNodeObj.RowArray.push({ Lable: $(child)[0].childNodes[0].textContent, Options: opts })
+                                } else {
+                                    childNodeObj.RowArray.push({ Label: child.textContent })
+                                }
+                            })
+                            break;
+                        case "SPAN":
+                            childNodeObj.Name = $(node).attr("data");
+                            childNodeObj.Lable = $(node).find(".title1").text();
+                            childNodeObj.SubLabel = $(node).find(".title2").text();
+                            childNodeObj.LableArray = []    
 
-                    switch (node.nodeName) {
+                            $(node).find("table th").each((index, el) => {
+                                childNodeObj.LableArray.push(el.textContent)
+                            })
+                            childNodeObj.Range = Number($(node).find(".title2").attr("colspan")) - 1;
+                            break
                         case "LABEL":
                             childNodeObj.Label = node.textContent
                             break;
@@ -75,7 +124,10 @@
                             childNodeObj.Options = opt
                             break;
                         case "DIV":
-                            if ($(node).children("label :input").attr("type") == "radio" || "RADIO") {
+                            if ($(node).hasClass("isTable")) {
+                                switchValue = 'TABLE';
+                            }
+                            if ($(node).children("label").children(":input").attr("type") == "radio" || "RADIO") {
                                 console.log("NODE => ", node)
                                 childNodeObj.Name = $(node).children("label").children(":input").attr("name")
                                 childNodeObj.InputType = "RadioButton"
@@ -103,30 +155,29 @@
 
                 })
                 jsonToSend.push(childNodeObj);
-            }
 
 
 
         })
-        console.log(JSON.stringify(jsonToSend))
-        $.ajax({
-            method: "POST",
-            url: "/api/Mqtt/SendForm",
-            contentType: "application/json; UTF8",
-            data: JSON.stringify(jsonToSend),
-            success: (response) => {
-                iziToast.show({
-                    title: "Form Submition",
-                    message: response.responsePhrase
-                })
-            },
-            error: (response) => {
-                iziToast.show({
-                    title: "Form Submition",
-                    message: "Error"
-                })
-            }
-        })
+        console.log(jsonToSend)
+        //$.ajax({
+        //    method: "POST",
+        //    url: "/api/Mqtt/SendForm",
+        //    contentType: "application/json; UTF8",
+        //    data: JSON.stringify(jsonToSend),
+        //    success: (response) => {
+        //        iziToast.show({
+        //            title: "Form Submition",
+        //            message: response.responsePhrase
+        //        })
+        //    },
+        //    error: (response) => {
+        //        iziToast.show({
+        //            title: "Form Submition",
+        //            message: "Error"
+        //        })
+        //    }
+        //})
        
     })
 }

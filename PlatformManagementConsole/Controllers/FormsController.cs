@@ -80,11 +80,12 @@ namespace PlatformManagementConsole.Controllers
                     {
                         try
                         {
-                            db.Forms.Add(new Forms
-                            {
-                                Title = form.GetValue("Title").ToString(),
-                                Html = form.GetValue("Html").ToString(),
-                            });
+                        db.Forms.Add(new Forms
+                        {
+                            Title = form.GetValue("Title").ToString(),
+                            Html = form.GetValue("Html").ToString(),
+                            JsonForm = form.GetValue("JsonForm").ToString()
+                        }); ;
 
                             db.SaveChanges();
 

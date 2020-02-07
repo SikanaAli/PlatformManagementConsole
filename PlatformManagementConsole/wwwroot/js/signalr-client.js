@@ -88,6 +88,7 @@ s_client.on("ssdStatus", (data) => {
 });
 
 let FormHtml = []
+let FormsAll = []
 
 s_client.on("RefreshFormsList", (Forms) => {
     FormHtml = [];
@@ -99,6 +100,7 @@ s_client.on("RefreshFormsList", (Forms) => {
     Forms.forEach((form) => {
         let listItem = `<li class="list-group-item " data-id="${FormIndex}">${form.title} <i class="fi-xnsuxl-network-solid"></i> </li>`
         FormHtml.push(`${form.html}`)
+        FormsAll.push(form)
         formList.prepend(listItem);
         FormIndex++;
     })
@@ -126,10 +128,11 @@ s_client.on("MqttDisconnected", (result) => {
     })
 })
 //Session
-let Sessions = [];
+let Sessions = '';
 s_client.on("Sessions", (result) => {
-    Sessions = result;
-    console.log(Sessions);
+    result.forEach((item, index) => {
+        Sessions+= `<option value="${item.session_name}">${item.session_name}</option>`;
+    })
 })
 
 s_client.on("SessionAdded", (result) => {

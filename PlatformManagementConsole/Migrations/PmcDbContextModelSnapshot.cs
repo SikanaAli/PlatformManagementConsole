@@ -23,6 +23,8 @@ namespace PlatformManagementConsole.Migrations
 
                     b.Property<string>("Html");
 
+                    b.Property<string>("JsonForm");
+
                     b.Property<string>("Title");
 
                     b.HasKey("Id");
