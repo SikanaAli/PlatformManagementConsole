@@ -22,7 +22,7 @@
     <div class="tab-content h-100" id="myTabContent">
         <div class="tab-pane fade h-100 show active" id="home" role="tabpanel" aria-labelledby="home-tab">
             <div class="row h-100">
-                <div class="col-md-6 border-right h-100">
+                <div class="col-md-6 border-right h-100" id="msg-config">
                     <div class="form-group">
                         <label>
                             @*<i class="fi-xtllxl-spreadsheet-thin"></i>*@
@@ -30,13 +30,13 @@
                             Message Format
                         </label>
                         <select class=" form-control " id="msg-format" name="msgstyle">
-                            <option value="0">
+                            <option value="1">
                                 With Full Length Image
                             </option>
-                            <option value="1">
+                            <option value="2">
                                 With Side Image
                             </option>
-                            <option value="2">
+                            <option value="3">
                                 With No Image
                             </option>
                         </select>
@@ -67,23 +67,28 @@
                                 <label>Link Title</label>
                                 <input type="text" name="linkTitle" class="form-control" id="msg-link-title"/>
                             </div>
-                            <div class="d-flex">
-                                <label>Link Type:</label>
-                                <span class="ml-2">
-                                    <select name="msgLinkSelect" id="msgLinkSelect" class="form-control form-control-sm">
-                                        <option value="0">Form</option>
-                                        <option value="1">Link</option>
-                                    </select>
-                                </span>
+                            <div >
+                                <div class="d-flex">
+                                    <label>Link Type:</label>
+                                    <span class="ml-2">
+                                        <select name="msgLinkSelect" id="msgLinkSelect" class="form-control form-control-sm">
+                                            <option value="0">Form</option>
+                                            <option value="1">Link</option>
+                                        </select>
+                                    </span>
+                                </div>
                                 
                             </div>
                             <div id="selectedLinkType">
-
+                                
                             </div>
                         </div>
                         <div>
-                            <label> <i class="fi-xtluxl-calendar-thin"></i>Message Expiry Date</label>
+                            <label><i class="fi-xtluxl-calendar-thin"></i>Message Expiry Date</label>
                             <input type="datetime-local" value="" name="msgExpiry" class="form-control" id="msg-expiry" />
+                        </div>
+                        <div class="p-3 ">
+                            <button class="btn btn-primary pull-right" id="save-msg">Save Massege</button>
                         </div>
                     </div>
                 </div>

@@ -16,6 +16,8 @@ namespace PlatformManagementConsole.Models
         public int LinkType { get; set; }
         public int MsgFormat { get; set; }
         public DateTime MsgExp { get; set; }
+        public string MsgHtml { get; set; }
+        public string MsgJson { get; set; }
 
 
     }

@@ -5,13 +5,13 @@
 
         let $card = $("#card")
 
-        if ($(e.target).val() == 0 & ($card.hasClass("card-horizontal") || $card.hasClass("card-no-img"))) {
+        if ($(e.target).val() == 1 & ($card.hasClass("card-horizontal") || $card.hasClass("card-no-img"))) {
 
             $card.removeClass();
             $card.find("#msg-image-view").removeAttr("hidden")
             $card.addClass("card")
 
-        } else if ($(e.target).val() == 1 & ($card.hasClass("card") || $card.hasClass("card-no-img"))) {
+        } else if ($(e.target).val() == 2 & ($card.hasClass("card") || $card.hasClass("card-no-img"))) {
             console.log("A => ", $card.has(" "))
 
             $card.removeClass()
@@ -48,18 +48,16 @@
     $("#msgLinkSelect").change((e) => {
         console.log($(e.target).val())
         if ($(e.target).val() == 0) {
-            let select = '<lable>Forms</lable><select name="selectedForm" class="form-control">'
-            let selectOptions = '';
-            FormsAll.forEach((form) => {
-                selectOptions += `<option value="${form.id}">${form.title}</option>`
-            });
-            select + selectOptions + "</select>"
+            let select = '<lable>Forms</lable><select name="selectedForm" class="form-control link">' + FormsOptions +'</select>'
+            
+            
+             
             console.log(select)
             
             $("#selectedLinkType").html(select);
         }
         if ($(e.target).val() == 1) {
-            let input = '<lable>Link</lable><input type="text" name="link" class="form-control"/>'
+            let input = '<lable>Link</lable><input type="text" name="link" class="form-control link"/>'
             $("#selectedLinkType").html(input);
         }
     })
@@ -82,4 +80,36 @@
         }
         
     });
+
+    
+
+    $("#save-msg").click((e) => {
+        let msghtmlGettter = new Promise((resolve) => {
+            $("#msg-preview *").removeAttr('id');
+
+            resolve($("#msg-preview").html())
+        })
+        msghtmlGettter.then(msgHtml => {
+            let msgObj = {}
+            let msgFormart = $("#msg-format").val()
+            let linktype = $("#msgLinkSelect").val()
+
+            msgObj.Type = msgFormart;
+            msgObj.LinkType = linktype;
+            msgObj.LinkTitle = $("#msg-link-title").val()
+            msgObj.Link = $(".link").val();
+            msgObj.ExpiryDate = $("#msg-expiry").val()
+            msgObj.Content = $("#msg-body").val()
+            msgObj.Title = $("#msg-title").val()
+            msgObj.Html = msgHtml;
+
+            if ((msgFormart == 1) || (msgFormart == 2)) {
+                msgObj.Image = $(".card-img-top").attr('src').split(',')[1];
+            }
+
+            console.log(msgObj);
+        })
+        
+
+    })
 })

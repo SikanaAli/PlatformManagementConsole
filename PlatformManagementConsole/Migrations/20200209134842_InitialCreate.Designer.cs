@@ -9,7 +9,7 @@ using PlatformManagementConsole.Contexts;
 namespace PlatformManagementConsole.Migrations
 {
     [DbContext(typeof(PmcDbContext))]
-    [Migration("20200206081125_InitialCreate")]
+    [Migration("20200209134842_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -52,6 +52,10 @@ namespace PlatformManagementConsole.Migrations
                     b.Property<DateTime>("MsgExp");
 
                     b.Property<int>("MsgFormat");
+
+                    b.Property<string>("MsgHtml");
+
+                    b.Property<string>("MsgJson");
 
                     b.Property<string>("Title");
 

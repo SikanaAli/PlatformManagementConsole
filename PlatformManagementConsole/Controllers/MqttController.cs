@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text;
+using System.IO;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -41,6 +42,7 @@ namespace PlatformManagementConsole.Controllers
         private const string RESOLVER_INIT = "cmsb/resolver/init";
         private const string RESOLVER_CLIENT_FORMS = "cmsb/resolver/forms";
         private const string RESOLVER_LAST_WILL = "cmsb/resolver/lw";
+        private const string SUBMITED_FORMS = "cmsb/resolver/submited";
 
 
         
@@ -159,7 +161,18 @@ namespace PlatformManagementConsole.Controllers
                             }
                         }
                         break;
+                    case SUBMITED_FORMS:
+                        string data = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
 
+                        string workingDirectory = Environment.CurrentDirectory;
+                        // or: Directory.GetCurrentDirectory() gives the same result
+
+                        // This will get the current PROJECT directory
+                        string projectDirectory = Directory.GetParent(workingDirectory).Parent.FullName;
+                        string recivedDataFile = projectDirectory + "\\Data.txt";
+                        System.IO.File.AppendAllText(recivedDataFile, data + Environment.NewLine);
+                        Console.WriteLine(recivedDataFile);
+                        break;
                     default:
                         await _hubContext.Clients.All.SendAsync("Undefined", e.ApplicationMessage);
                         break;

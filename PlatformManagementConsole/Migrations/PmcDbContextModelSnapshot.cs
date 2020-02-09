@@ -51,6 +51,10 @@ namespace PlatformManagementConsole.Migrations
 
                     b.Property<int>("MsgFormat");
 
+                    b.Property<string>("MsgHtml");
+
+                    b.Property<string>("MsgJson");
+
                     b.Property<string>("Title");
 
                     b.HasKey("Id");

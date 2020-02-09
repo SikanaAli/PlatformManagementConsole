@@ -88,30 +88,32 @@ s_client.on("ssdStatus", (data) => {
 });
 
 let FormHtml = []
-let FormsAll = []
+let FormsOptions = ''
 
 s_client.on("RefreshFormsList", (Forms) => {
     FormHtml = [];
     let FormIndex = 0;
     console.log(Forms);
 
-    let formList = $(".list-group")
-    formList.empty();
-    Forms.forEach((form) => {
-        let listItem = `<li class="list-group-item " data-id="${FormIndex}">${form.title} <i class="fi-xnsuxl-network-solid"></i> </li>`
-        FormHtml.push(`${form.html}`)
-        FormsAll.push(form)
-        formList.prepend(listItem);
-        FormIndex++;
-    })
-    $(".list-group-item").click(function (e) {
+    if (Forms.length != 0) {
+        let formList = $(".list-group")
+        formList.empty();
+        Forms.forEach((form) => {
+            let listItem = `<li class="list-group-item " data-id="${FormIndex}">${form.title} <i class="fi-xnsuxl-network-solid"></i> </li>`
+            FormHtml.push(`${form.html}`)
+            FormsOptions += '<option value="' + form.id + '">' + form.title + '</option>'
+            formList.prepend(listItem);
+            FormIndex++;
+        })
+        $(".list-group-item").click(function (e) {
 
-        $(this).parent().find(".list-group-item").css("background-image", "linear-gradient(to right,rgb(255,255,255),rgba(255,255,255))")
-        $(this).css("background-image", "linear-gradient(to right,rgba(153,255,153,0.2),rgba(102,127,255,0.2))");
-        $("#form-view").empty();
-        $("#form-view").html(FormHtml[Number($(this).attr("data-id"))])
+            $(this).parent().find(".list-group-item").css("background-image", "linear-gradient(to right,rgb(255,255,255),rgba(255,255,255))")
+            $(this).css("background-image", "linear-gradient(to right,rgba(153,255,153,0.2),rgba(102,127,255,0.2))");
+            $("#form-view").empty();
+            $("#form-view").html(FormHtml[Number($(this).attr("data-id"))])
 
-    })
+        })
+    }
 })
 
 s_client.on("MqttConnected", (result) => {
