@@ -100,6 +100,7 @@ namespace PlatformManagementConsole.Controllers
         {
             if (Client.IsConnected)
             {
+                Console.WriteLine($"\"{formJson.ToString().Replace('"','\'')}\"");
                 var msg = new MqttApplicationMessageBuilder()
                     .WithTopic(RESOLVER_CLIENT_FORMS)
                     .WithPayload(Encoding.ASCII.GetBytes(formJson.ToString()))
@@ -126,8 +127,6 @@ namespace PlatformManagementConsole.Controllers
             .WithCleanSession()
             .Build();
 
-            
-
             Client.UseApplicationMessageReceivedHandler(async e =>
             {
                 string topic = e.ApplicationMessage.Topic;
@@ -139,24 +138,24 @@ namespace PlatformManagementConsole.Controllers
                         Console.WriteLine("Adding Resolver");
                         await AddResolver(payload);
                         break;
-                    case "cmsb/resolver/status":
-                        break;
                     case RESOLVER_LAST_WILL:
-                        var id = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
-
+                        string id = Encoding.UTF8.GetString(e.ApplicationMessage.Payload);
+                        
+                        
+                        
                         using(var db = new PmcDbContext())
                         {
+                            Console.WriteLine("Last will");
                             if (db.Resolvers.Count((item) => item.Guid == id)  == 1)
                             {
                                 Console.WriteLine("LAST WILL ID {0}", id);
                                 var row = db.Resolvers.Where(item => item.Guid == id).FirstOrDefault();
 
-                                db.Resolvers.Remove(row);
+                                row.IsOnline = false;
                                 db.SaveChanges();
-
-                                
-
-                                await _hubContext.Clients.All.SendAsync("RefreshResolver", id);
+                                string json = "{'id':'" + id + "'}";
+                                var deviceStatus = JObject.Parse(json);
+                                await _hubContext.Clients.All.SendAsync("ssdStatus", deviceStatus.ToString());
                             }
                         }
                         break;
@@ -197,7 +196,8 @@ namespace PlatformManagementConsole.Controllers
 
             using (var db = new PmcDbContext())
             {
-                if (db.Resolvers.Count((item) => item.Guid == data.GetValue("Guid").ToString()) == 0)
+                var count = db.Resolvers.Count((item) => item.Guid == data.GetValue("Guid").ToString());
+                if (count == 0)
                 {
                     db.Resolvers.Add(new Resolver
                     {
@@ -213,30 +213,45 @@ namespace PlatformManagementConsole.Controllers
 
                     db.SaveChanges();
 
+                    var dbList = db.Resolvers.ToList();
+
+                    var clientResolver = new List<PmcHub.clientResolver>();
+
+                    foreach (var item in dbList)
+                    {
+                        clientResolver.Add(new PmcHub.clientResolver
+                        {
+                            Id = item.Guid,
+                            Text = item.Name,
+                            DeviceType = item.DeviceType,
+                            Platform = item.Platform,
+                            OsVersion = item.OsVersion,
+                            OEM = item.OEM,
+                            Model = item.Model,
+                            IsOnline = item.IsOnline
+
+                        });
+                    }
+
+
+                    await _hubContext.Clients.All.SendAsync("AddResolver", clientResolver);
+                }
+                else if(count == 1)
+                {
+                    Console.WriteLine("Found 1");
+
+                    var row = db.Resolvers.Where(item => item.Guid == data.GetValue("Guid").ToString()).FirstOrDefault();
+
+                    row.IsOnline = true;
+                    db.SaveChanges();
+
+                    string json = "{'id':'"+data.GetValue("Guid").ToString()+"', 'isOnline':'true'}";
+                    var deviceStatus = JObject.Parse(json);
+                    await _hubContext.Clients.All.SendAsync("ssdStatus", deviceStatus.ToString());
                     
                 }
 
-                var dbList = db.Resolvers.ToList();
-
-                var clientResolver = new List<PmcHub.clientResolver>();
-
-                foreach (var item in dbList)
-                {
-                    clientResolver.Add(new PmcHub.clientResolver {
-                        Id = item.Guid,
-                        Text = item.Name,
-                        DeviceType = item.DeviceType,
-                        Platform = item.Platform,
-                        OsVersion = item.OsVersion,
-                        OEM = item.OEM,
-                        Model = item.Model,
-                        IsOnline = item.IsOnline
-
-                    });
-                }
                 
-
-                await _hubContext.Clients.All.SendAsync("AddResolver", clientResolver);
             }
         }
 

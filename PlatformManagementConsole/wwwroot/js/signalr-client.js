@@ -14,6 +14,7 @@ s_client.start().then(function () {
     console.log("Connected to SignalR")
     s_client.invoke("RefreshResolvers");
     s_client.invoke("RefreshFormsList");
+    s_client.invoke("GetSessions");
 }).catch(function (err) {
     return console.error(err.toString());
     });
@@ -37,46 +38,57 @@ s_client.on("AddResolver", (resolver) => {
     let tempResolvers = []
     resolver.forEach((row) => {
 
-        let { text, id } = row
+        let { text, id, isOnline } = row
 
-
+        //console.log(isOnline);
         tempResolvers.push({
             label: text,
             id,
+            isOnline,
             parent: "resolver-p"
         });
     });
     $("ul .vtree-subtree").remove()
     tempResolvers.forEach((item) => {
-        resolverTree.add(item)
+        
+        if (item.isOnline == true) {
+            delete (item.isOnline)
+            resolverTree.add(item)
+
+            let leaf = `[data-vtree-id="${item.id}"]`
+            console.log(leaf);
+            $(leaf).children("a").append("<i class='fa fa-circle isOnline pl-2'></i>")
+        } else {
+            delete (item.isOnline)
+            resolverTree.add(item)
+            let leaf = `[data-vtree-id="${item.id}"]`
+            console.log(leaf);
+            $(leaf).children("a").append("<i class='fa fa-circle isOffline pl-2'></i>")
+        }
+        
     })
     
 })
 
-s_client.on("RefreshResolver", (id) => {
-    console.log(id)
-    //let tempResolvers = []
-    //resolvers.forEach((row) => {
-        
-    //    let { text, id } = row
+s_client.on("ssdStatus", (data) => {
+    console.log(data)
+    data = JSON.parse(data)
 
-        
-    //    tempResolvers.push({
-    //        label: text,
-    //        id,
-    //        parent: "resolver-p"
-    //    });
-    //});
-    //$("ul .vtree-subtree").remove()
+    if (data.hasOwnProperty("isOnline") && data.isOnline) {
+        let leaf = `[data-vtree-id="${data.id}"]`
+        $(leaf).children("a").children("i").removeClass("isOffline");
+        $(leaf).children("a").children("i").addClass("isOnline");
+    } else {
+        let leaf = `[data-vtree-id="${data.id}"]`
+        $(leaf).children("a").children("i").removeClass("isOnline");
+        $(leaf).children("a").children("i").addClass("isOffline");
+    }
 
-    //tempResolvers
-
-    //resolverFunc(tempResolvers);
-    resolverTree.remove(id)
 
 });
 
 let FormHtml = []
+let FormsAll = []
 
 s_client.on("RefreshFormsList", (Forms) => {
     FormHtml = [];
@@ -88,6 +100,7 @@ s_client.on("RefreshFormsList", (Forms) => {
     Forms.forEach((form) => {
         let listItem = `<li class="list-group-item " data-id="${FormIndex}">${form.title} <i class="fi-xnsuxl-network-solid"></i> </li>`
         FormHtml.push(`${form.html}`)
+        FormsAll.push(form)
         formList.prepend(listItem);
         FormIndex++;
     })
@@ -114,7 +127,20 @@ s_client.on("MqttDisconnected", (result) => {
         message: result,
     })
 })
+//Session
+let Sessions = '';
+s_client.on("Sessions", (result) => {
+    result.forEach((item, index) => {
+        Sessions+= `<option value="${item.session_name}">${item.session_name}</option>`;
+    })
+})
 
+s_client.on("SessionAdded", (result) => {
+    iziToast.success({
+        title: "Event Session",
+        message: result
+    })
+})
 
 //Click Events
 

@@ -1,15 +1,43 @@
 
 
+
+
+
 $(document).ready(function () {
     
 
-    /*FORM BUILDER Start*/
-    $(".form_bal_titlefeild").draggable({
+/*FORM BUILDER Start*/
+    $(".form_bal_banner").draggable({
         helper: function () {
-            return getTitleFeildHtml();
+            return getBannerFieldHTML();
         },
         connectToSortable: ".form_builder_area"
     });
+    $(".form_bal_RankTable").draggable({
+        helper: function () {
+            return getScoreRankHTML();
+        },
+        connectToSortable: ".form_builder_area"
+    })
+    $(".form_bal_titlefeild").draggable({
+        helper: function () {
+            return getTitleFieldHTML();
+        },
+        connectToSortable: ".form_builder_area"
+    });
+    $(".form_bal_listgroup").draggable({
+        helper: function () {
+            return getListGroupHTML();
+        },
+        connectToSortable: ".form_builder_area"
+        
+    })
+    $(".form_bal_text").draggable({
+        helper: function () {
+            return getTextHTML();
+        },
+        connectToSortable: ".form_builder_area"
+    })
     $(".form_bal_textfield").draggable({
         helper: function () {
             return getTextFieldHTML();
@@ -83,12 +111,34 @@ $(document).ready(function () {
     });
     $(".form_builder_area").disableSelection();
 
-    function getTitleFeildHtml() {
-        var field = generateField()
-        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="title" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Form Title" data-field="' + field + '" /></div></div></div>'
+
+    function getBannerFieldHTML() {
+        var field = generateField();
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="banner" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="file" name="label_' + field + '" class=" form_input_file" value="Form Title" data-field="' + field + '" /></div></div> </div>';
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
+    }
+    function getListGroupHTML() {
+        var field = generateField();
+        var option = generateField();
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div><hr/><div class="row li_row form_output" data-type="listGroup" data-field="' + field + '"><div class="row li_row"><div class="col-md-12"><div class="field_extra_info_' + field + '"><div data-field="' + field + '" class="row listgroupMargin listgroup_row_' + field + '" data-opt="' + option + '"><hr/><div class="col-md-4"><div class="form-group"><input type="text" value="Option" class="l_lable form-control"/></div></div><div class="col-md-4"><div class="form-group"><select name="listGroupSelect" class="l_select form-control"><option value="s">Sessions</option><option value="i">Text Field</option></select></div></div><div class="col-md-4"><i class="margin-top-5 fa fa-plus-circle fa-2x default_blue add_more_listitem" data-field="' + field + '"></i></div><hr/></div></div></div></div></div></div>';
         return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
     }
 
+    function getTitleFieldHTML() {
+        var field = generateField();
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="title" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Form Title" data-field="' + field + '" /></div></div></div>'
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
+    }
+    function getTextHTML() {
+        var field = generateField();
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="nonTextField" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="label_' + field + '" class="form-control form_input_label" value="Label" data-field="' + field + '"/></div></div></div>';
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html)
+    }
+    function getScoreRankHTML() {
+        var field = generateField();
+        var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="ScoreRankTable" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><lable>Name</lable><input type="text" name="label_' + field + '" class="form-control form_input_label sr_name" value="Name" data-field="' + field + '"/></div></div><div class="col-md-12"><div class="form-group"><lable>First Title</lable><input type="text" name="label_' + field + '" class="form-control form_input_label title1" value="Title_one" data-field="' + field + '"/></div></div><div class="col-md-12"><div class="form-group"><lable>Second Title</lable><input type="text" name="label_' + field + '" class="form-control form_input_label title2" value="Title_2" data-field="' + field + '"/></div></div><div class="col-md-12"><div class="form-group"><lable>Range</lable><input type="number" max="10" min="1" name="label_' + field + '" class="form-control form_input_label range" value="Range" data-field="' + field + '"/></div></div><div class="col-md-12"><div class="form-group"><lable>Catergories (<small>place a comma "," between each category)</small></lable><textarea name="label_' + field + '" class="form-control form_input_label lableArray" data-field="' + field + '"></textarea></div></div></div>';
+        return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
+    }
     function getButtonFieldHTML() {
         var field = generateField();
         var html = '<div class="all_div"><div class="row li_row"><div class="col-md-12"><button type="button" class="btn btn-primary btn-sm remove_bal_field pull-right" data-field="' + field + '"><i class="fa fa-times"></i></button></div></div></div><hr/><div class="row li_row form_output" data-type="button" data-field="' + field + '"><div class="col-md-12"><div class="form-group"><input type="text" name="class_' + field + '" class="form-control form_input_button_class" placeholder="Class" value="btn btn-primary" data-field="' + field + '"/></div></div><div class="col-md-12"><div class="form-group"><input type="text" name="value_' + field + '" data-field="' + field + '" class="form-control form_input_button_value" value="Submit" placeholder="Value"/></div></div><div class="col-md-12"><div class="form-group"><input type="text" name="text_' + field + '" class="form-control form_input_name" placeholder="Name"/></div></div></div>';
@@ -143,6 +193,17 @@ $(document).ready(function () {
         return $('<div>').addClass('li_' + field + ' form_builder_field').html(html);
     }
 
+
+    $(document).on('click', '.add_more_listitem', function () {
+        $(this).closest('.form_builder_field').css('height', 'auto');
+        var field = $(this).attr('data-field');
+        var option = generateField();
+        var list_group_item = '';
+        $('.field_extra_info_' + field).append('<div data-field="' + field + '" class="row listgroupMargin listgroup_row_' + field + '" data-opt="' + option + '"><hr/><div class="col-md-4"><div class="form-group"><input type="text" value="Option" class="l_lable form-control"/></div></div><div class="col-md-4"><div class="form-group"><select name="listGroupSelect" class="l_select form-control"><option value="s">Sessions</option><option value="i">Text Field</option></select></div></div><div class="col-md-4"><i class="margin-top-5 fa fa-plus-circle fa-2x default_blue add_more_listitem" data-field="' + field + '"></i><i class="margin-top-5 margin-left-5 fa fa-times-circle default_red fa-2x remove_more_listitem" data-field="' + field + '"></i></div></div>');
+
+        getPreview();
+    })
+
     $(document).on('click', '.add_more_select', function () {
         $(this).closest('.form_builder_field').css('height', 'auto');
         var field = $(this).attr('data-field');
@@ -188,6 +249,13 @@ $(document).ready(function () {
         $('.checkbox_list_' + field).html(options);
         getPreview();
     });
+
+    $(document).on('keyup', '.l_lable', function () {
+        getPreview();
+    });
+    $(document).on('change', '.l_select', function () {
+        getPreview()
+    })
     $(document).on('keyup', '.s_opt', function () {
         var op_val = $(this).val();
         var field = $(this).closest('.row').attr('data-field');
@@ -244,6 +312,15 @@ $(document).ready(function () {
             getPreview();
         });
     });
+    $(document).on('click', '.remove_more_listitem', function () {
+        var field = $(this).attr('data-field');
+        console.log("b4 remove f=> "+field);
+        $(this).closest('.listgroup_row_' + field).hide('400', function () {
+            $(this).remove();
+            getPreview();
+            console.log("af remove");
+        });
+    });
     $(document).on('click', '.remove_more_select', function () {
         var field = $(this).attr('data-field');
         $(this).closest('.select_row_' + field).hide('400', function () {
@@ -295,6 +372,10 @@ $(document).ready(function () {
     $(document).on('keyup', '.form_input_button_value', function () {
         getPreview();
     });
+    $(document).on('change', '.form_input_file', function () {
+        console.log("changed")
+        getPreview();
+    });
     $(document).on('change', '.form_input_req', function () {
         getPreview();
     });
@@ -310,17 +391,75 @@ $(document).ready(function () {
     function generateField() {
         return Math.floor(Math.random() * (100000 - 1 + 1) + 57);
     }
+
     function getPreview(plain_html = '') {
         var el = $('.form_builder_area .form_output');
         var html = '';
         el.each(function () {
             var data_type = $(this).attr('data-type');
-            //var field = $(this).attr('data-field');
+            var field = $(this).attr('data-field');
             var label = $(this).find('.form_input_label').val();
             var name = $(this).find('.form_input_name').val();
-
+            if (data_type === 'banner') {
+                let imgSrc;
+                if ($(this).children("div").children("div").children("input")[0].files.length === 1) {
+                    let file = $(this).children("div").children("div").children("input")[0].files[0];
+                    let reader = new FileReader();
+                    reader.onload = (e) => {
+                        console.log(e.target.result);
+                        $(`[data-img-id="${field}"]`).attr("src", e.target.result);
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    imgSrc = "https://via.placeholder.com/250x100.png?text=250x100+image+size"
+                }
+                let banner = '<div  class="form-group"><img data-img-id="' + field + '" src="' + imgSrc + '" style="width:100%;height:10rem"/></div>'
+                return html += banner;
+            }
             if (data_type === 'title') {
                 return html += '<div id="title-mutation" class="form-group text-center"><h3>'+ label +'</h3></div>'
+            }
+            if (data_type === 'listGroup') {
+                var list_group_items = '';
+                let selected_input = '';
+                $('.listgroup_row_' + field).each(function (i, el) {
+                    console.log($(el));
+                    if ($(this).find('.l_select').val() === 's') {
+                        selected_input = '<select name="' + $(el).find("input[type=text]").val() + '" class=" ml-3 form-control form-control-sm">'+ Sessions + '</select>';
+                        
+                    }
+                    if ($(this).find('.l_select').val() === 'i') {
+                        selected_input = '<input type="text" name="' + $(el).find("input[type=text]").val() + '" class=" ml-3 form-control form-control-sm;"/>';
+                    }
+
+                    list_group_items += '<li class="list-group-item d-flex justify-content-between align-items-center">' + $(el).find("input[type=text]").val() + ' ' + selected_input + '</li>'
+                })
+                return html+= '<div class="form-group"><ul class="list-group">' + list_group_items + '</ul></div>';
+            }
+            if (data_type === 'nonTextField') {
+                html += '<div class="form-group"><p>' + label + '</p></div> ';
+            }
+            if (data_type === 'ScoreRankTable') {
+                var t_name = $(this).find(".sr_name").val()
+                var title1 = $(this).find(".title1").val();
+                var title2 = $(this).find(".title2").val()
+                var range = $(this).find(".range").val();
+                var labels = $(this).find(".lableArray").val().split(',');
+                var labelArray = labels.toString().split(',');
+                var tr = '';
+                labelArray.forEach((row, i,parent) => {
+                    console.log(row);
+                    let temptr = '<tr> <th class="labels">' + parent[i] + '</th>'
+                    for (var i = 0; i < Number(range); i++) {
+                        temptr+= '<td> <input type="radio" class="form-check-input"/></td>'
+                    }
+                    temptr + '</tr>';
+                    tr += temptr;
+                })
+                console.log(t_name)
+                var table = `<div class="form-group"><span data="${t_name}"><p class="title1">${title1}</p><table class="table table-sm"> <tr><td class="title2" colspan="${Number(range)+1}">${title2}</td></tr>${tr}</table></span></div>`
+
+                html += table;
             }
             if (data_type === 'text') {
                 var placeholder = $(this).find('.form_input_placeholder').val();
@@ -414,7 +553,7 @@ $(document).ready(function () {
             $('.export_html').hide();
         }
         if (plain_html === 'html') {
-            console.log(html);
+            
             $('.preview').hide();
             $('.plain_html').show().find('textarea').val(html);
             let _data = {
@@ -422,18 +561,18 @@ $(document).ready(function () {
                 'Html': `${html}`
             }
             
-            $.ajax({
-                type:"POST",
-                url: `/api/Forms`,
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(_data),
-                success: (res) => {
-                    console.log(res)
-                },
-                failure: (err) => {
-                    console.log(err)
-                }
-            })
+            //$.ajax({
+            //    type:"POST",
+            //    url: `/api/Forms`,
+            //    contentType: "application/json; charset=utf-8",
+            //    data: JSON.stringify(_data),
+            //    success: (res) => {
+            //        console.log(res)
+            //    },
+            //    failure: (err) => {
+            //        console.log(err)
+            //    }
+            //})
             
         } else {
             $('.plain_html').hide();

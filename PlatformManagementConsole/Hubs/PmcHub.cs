@@ -38,8 +38,6 @@ namespace PlatformManagementConsole.Hubs
             {
                 using (var db = new PmcDbContext())
                 {
-
-
                     var ResolverList = db.Resolvers.ToList();
                     List<clientResolver> clientResolvers = new List<clientResolver>();
 
@@ -78,5 +76,13 @@ namespace PlatformManagementConsole.Hubs
             }
         }
 
+        public async Task GetSessions()
+        {
+            using (var db = new PmcDbContext())
+            {
+                var SessionsList = db.Sessions.ToList();
+                await Clients.All.SendAsync("Sessions", SessionsList);
+            }
+        }
     }
 }

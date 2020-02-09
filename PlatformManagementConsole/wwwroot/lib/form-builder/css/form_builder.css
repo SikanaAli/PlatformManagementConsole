@@ -128,7 +128,7 @@
     display: inline;
 }
 
-.add_more_select, .add_more_radio, .add_more_checkbox, .remove_more_select, .remove_more_radio, .remove_more_checkbox {
+.add_more_select, .add_more_radio, .add_more_checkbox, .remove_more_select, .remove_more_radio, .remove_more_checkbox, .add_more_listitem {
     cursor: pointer;
 }
 .export_html{
@@ -140,4 +140,8 @@
 .disabledDiv {
     pointer-events: none;
     opacity: 0.4;
+}
+
+.listgroupMargin{
+    margin-left: 0 !important;
 }

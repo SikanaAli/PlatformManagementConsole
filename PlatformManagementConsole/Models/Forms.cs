@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
+
 namespace PlatformManagementConsole.Models
 {
     public class Forms
@@ -22,5 +23,6 @@ namespace PlatformManagementConsole.Models
         }
         public string Title { get; set; }
         public String Html { get; set; }
+        public String JsonForm { get; set; }
     }
 }

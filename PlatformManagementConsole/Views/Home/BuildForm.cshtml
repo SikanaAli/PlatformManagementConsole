@@ -24,9 +24,15 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" id="nav-creator-tab" data-toggle="tab" href="#nav-creator" role="tab" aria-controls="nav-profile" aria-selected="false">
+        <a class="nav-link" id="nav-creator-tab" data-toggle="tab" href="#nav-creator" role="tab" aria-controls="nav-creator" aria-selected="false">
             <i class="fi-xtluxl-edit-thin"></i>
             Creator
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" id="nav-session-tab" data-toggle="tab" href="#nav-session" role="tab" aria-controls="nav-session" aria-selected="false">
+            <i class="fi-xnsuhl-users-cog"></i>
+            Session
         </a>
     </li>
 </ul>
@@ -36,11 +42,11 @@
             <div class="col-md-5 " id="form-list">
                 <div>
                     <ul class="list-group">
-                        <li class="list-group-item " >No Forms</li>
+                        <li class="list-group-item ">No Forms</li>
                     </ul>
                 </div>
             </div>
-            <div class="col " >
+            <div class="col ">
                 <div id="form-view">
 
                 </div>
@@ -57,10 +63,22 @@
                 <div class="col-sm-2">
                     <nav class="nav-sidebar">
                         <ul class="nav">
+                            <li class="form_bal_banner">
+                                <a href="javascript:;"> Banner <i class="fa fa-plus-circle pull-right"></i></a>
+                            </li>
                             <li class="form_bal_titlefeild">
                                 <a href="javascript:;">Form Title <i class="fa fa-plus-circle pull-right"></i></a>
                             </li>
                             <div id="form-builder-elements" class="disabledDiv">
+                                <li class="form_bal_listgroup">
+                                    <a href="javascript:;">List Group<i class="fa fa-plus-circle pull-right"></i></a>
+                                </li>
+                                <li class="form_bal_text">
+                                    <a href="javascript:;">Text<i class="fa fa-plus-circle pull-right"></i></a>
+                                </li>
+                                <li class="form_bal_RankTable">
+                                    <a href="javascript:;">Score/Rank Table<i class="fa fa-plus-circle pull-right"></i></a>
+                                </li>
                                 <li class="form_bal_textfield">
                                     <a href="javascript:;">Text Field <i class="fa fa-plus-circle pull-right"></i></a>
                                 </li>
@@ -114,7 +132,9 @@
 
         </div>
     </div>
-    
+    <div class="tab-pane fade show h-100" id="nav-session" role="tabpanel" aria-labelledby="nav-session-tab">
+        <partial name="_Session">
+    </div>
 </div>
 
 
