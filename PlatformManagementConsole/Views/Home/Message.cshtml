@@ -72,8 +72,8 @@
                                     <label>Link Type:</label>
                                     <span class="ml-2">
                                         <select name="msgLinkSelect" id="msgLinkSelect" class="form-control form-control-sm">
-                                            <option value="0">Form</option>
-                                            <option value="1">Link</option>
+                                            <option value="1">Form</option>
+                                            <option value="2">Link</option>
                                         </select>
                                     </span>
                                 </div>
@@ -112,7 +112,39 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">...</div>
+        <div class="tab-pane fade h-100" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+            <div class="modal" id="loading-modal">
+                <div class="w-100 h-100 d-flex justify-content-center align-items-center" ">
+                    <div class="w-50 h-50" id="loading-modal-container">
+
+                    </div>
+                </div>
+                
+            </div>
+            <div class="row h-100">
+                <div class="col-md-5">
+                    <div>
+                        <div class=" py-4 d-flex justify-content-between">
+                            <label>Search Messages</label>
+                            <input type="text" name="msgListSearch" placeholder="search" id="msg-list-search" class="form-control form-control-sm w-50"/>
+                        </div>
+                        <ul class="list-group" id="msg-list">
+                            <li class="list-group-item">No Messages</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="p-1 h-100" id="msg-view">
+
+                    </div>
+                    <div id="export_html_btn">
+                        <button style="cursor: pointer;" disabled class="btn btn-primary" id="send-message">Send Form</button>
+                    </div>
+                </div>
+
+            </div>
+            
+        </div>
     </div>
 </div>
 

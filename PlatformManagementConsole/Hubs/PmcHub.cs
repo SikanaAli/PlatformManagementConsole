@@ -84,5 +84,14 @@ namespace PlatformManagementConsole.Hubs
                 await Clients.All.SendAsync("Sessions", SessionsList);
             }
         }
+
+        public async Task GetMessages()
+        {
+            using (var db = new PmcDbContext())
+            {
+                var msgList = db.Messages.ToList();
+                await Clients.All.SendAsync("Messages", msgList);
+            }
+        }
     }
 }

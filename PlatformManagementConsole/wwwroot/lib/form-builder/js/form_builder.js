@@ -582,7 +582,7 @@ $(document).ready(function () {
                         case "H3":
                             childNodeObj.Name = "Title"
                             childNodeObj.Label = childNodes[0].textContent
-                            childNodeObj.InputType = "Label"
+                            childNodeObj.InputType = "Heading"
 
                             break;
                         case "UL":
@@ -605,9 +605,10 @@ $(document).ready(function () {
                             break;
                         case "SPAN":
                             childNodeObj.Name = $(node).attr("data");
-                            childNodeObj.Lable = $(node).find(".title1").text();
+                            childNodeObj.Label = $(node).find(".title1").text();
                             childNodeObj.SubLabel = $(node).find(".title2").text();
-                            childNodeObj.LableArray = []
+                            childNodeObj.InputType = "RankTable"
+                            childNodeObj.LabelArray = []
 
                             $(node).find("table th").each((index, el) => {
                                 childNodeObj.LableArray.push(el.textContent)

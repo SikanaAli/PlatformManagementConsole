@@ -161,12 +161,12 @@ body {
     flex: 1 1 auto;
     background-color: white;
 }
-    .card-horizontal .img-square-wrapper img{
-       height:100%;
-    }
-    .card-text {
-        white-space: pre-wrap;
-    }
+.card-horizontal .img-square-wrapper img{
+    height:100%;
+}
+.card-text {
+    white-space: pre-wrap;
+}
 
 #msg-legend{
     margin-top: -61px;
@@ -179,7 +179,23 @@ body {
     cursor:pointer
 
 }
+#send-message {
+    position: fixed;
+    right: 2rem;
+    bottom: 4.8rem;
+}
 
+#msg-view {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 10px 1px rgba(0,0,0,0.2) inset;
+    background-color: rgba(65, 65, 65, 0.1);
+}
+
+    #msg-view .msg-container {
+        width: 50%
+    }
 
 /*SSD(Smart Soft Deveices)*/
 
@@ -211,3 +227,6 @@ body {
         -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
         background-color: #555;
     }
+
+
+

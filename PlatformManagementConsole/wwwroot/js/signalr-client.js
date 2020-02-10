@@ -15,6 +15,7 @@ s_client.start().then(function () {
     s_client.invoke("RefreshResolvers");
     s_client.invoke("RefreshFormsList");
     s_client.invoke("GetSessions");
+    s_client.invoke("GetMessages");
 }).catch(function (err) {
     return console.error(err.toString());
     });
@@ -96,18 +97,18 @@ s_client.on("RefreshFormsList", (Forms) => {
     console.log(Forms);
 
     if (Forms.length != 0) {
-        let formList = $(".list-group")
+        let formList = $("#form-list-group")
         formList.empty();
         Forms.forEach((form) => {
-            let listItem = `<li class="list-group-item " data-id="${FormIndex}">${form.title} <i class="fi-xnsuxl-network-solid"></i> </li>`
+            let listItem = `<li class="list-group-item  form-item" data-id="${FormIndex}">${form.title} <i class="fi-xnsuxl-network-solid"></i> </li>`
             FormHtml.push(`${form.html}`)
             FormsOptions += '<option value="' + form.id + '">' + form.title + '</option>'
             formList.prepend(listItem);
             FormIndex++;
         })
-        $(".list-group-item").click(function (e) {
+        $(".form-item").click(function (e) {
 
-            $(this).parent().find(".list-group-item").css("background-image", "linear-gradient(to right,rgb(255,255,255),rgba(255,255,255))")
+            $(this).parent().find(".form-item").css("background-image", "linear-gradient(to right,rgb(255,255,255),rgba(255,255,255))")
             $(this).css("background-image", "linear-gradient(to right,rgba(153,255,153,0.2),rgba(102,127,255,0.2))");
             $("#form-view").empty();
             $("#form-view").html(FormHtml[Number($(this).attr("data-id"))])
@@ -142,6 +143,36 @@ s_client.on("SessionAdded", (result) => {
         title: "Event Session",
         message: result
     })
+})
+
+//Messages
+let msgHtmlArray = []
+let arrayId = 0;
+s_client.on("Messages", (messeges) => {
+    let msgList = $("#msg-list")
+
+    if (messeges.length != 0) {
+        msgList.empty();
+        messeges.forEach((msg) => {
+            let msgItem = `<li class="list-group-item msg-item" data-id="${arrayId}" data-reff="${msg.id}">${msg.title}</li>`
+            console.log(msg)
+            msgHtmlArray.push(msg.msgHtml)
+            msgList.prepend(msgItem)
+            arrayId++
+        })
+    }
+
+    $(".msg-item").click(function (e) {
+
+        $(this).parent().find(".msg-item").css("background-image", "linear-gradient(to right,rgb(255,255,255),rgba(255,255,255))")
+        $(this).parent().find(".msg-item").removeClass("selected-msg")
+        $(this).css("background-image", "linear-gradient(to right,rgba(153,255,153,0.2),rgba(102,127,255,0.2))");
+        $(this).addClass("selected-msg");
+        $("#msg-view").empty();
+        $("#msg-view").html(msgHtmlArray[Number($(this).attr("data-id"))])
+
+    })
+
 })
 
 //Click Events

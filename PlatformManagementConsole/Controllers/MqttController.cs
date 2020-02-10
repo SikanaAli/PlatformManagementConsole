@@ -40,7 +40,7 @@ namespace PlatformManagementConsole.Controllers
         private int MQTT_Port = 1883;
         private float MQTT_KeepAlive = 10.0f;
         private const string RESOLVER_INIT = "cmsb/resolver/init";
-        private const string RESOLVER_CLIENT_FORMS = "cmsb/resolver/forms";
+        private const string RESOLVER_CLIENT_MSG = "cmsb/resolver/msg";
         private const string RESOLVER_LAST_WILL = "cmsb/resolver/lw";
         private const string SUBMITED_FORMS = "cmsb/resolver/submited";
 
@@ -97,19 +97,63 @@ namespace PlatformManagementConsole.Controllers
 
         
         [HttpPost]
-        [Route("SendForm")]
-        public async Task<HttpResponseMessage> MqttSendForm([FromBody] JArray formJson)
+        [Route("send/message")]
+        public async Task<HttpResponseMessage> MqttSendForm([FromBody] JObject msgReff)
         {
             if (Client.IsConnected)
             {
-                Console.WriteLine($"\"{formJson.ToString().Replace('"','\'')}\"");
-                var msg = new MqttApplicationMessageBuilder()
-                    .WithTopic(RESOLVER_CLIENT_FORMS)
-                    .WithPayload(Encoding.ASCII.GetBytes(formJson.ToString()))
-                    .WithExactlyOnceQoS()
-                    .Build();
+                if (msgReff.ContainsKey("reff")) 
+                {
+                    using (var db = new PmcDbContext())
+                    {
+                        var _id = (int)msgReff.GetValue("reff");
+                        var msgItem = db.Messages.Where(item => item.Id == _id).FirstOrDefault();
 
-                await Client.PublishAsync(msg);
+                        var msgJson = JObject.Parse(msgItem.MsgJson);
+                        msgJson.Add("PostedDate", DateTime.Now.Date);
+                        if (!msgItem.Link.Contains("http"))
+                        { 
+                            var formid = Convert.ToInt32(msgItem.Link);
+                            if (db.Forms.Count(item => item.Id == formid) == 1)
+                            {
+                                var form = db.Forms.Where(item => item.Id == formid).FirstOrDefault();
+                                var formJson = JArray.Parse(form.JsonForm);
+                                msgJson.Remove("Link");
+                                msgJson.Remove("Html");
+                                msgJson.Add("Form", formJson);
+
+                                var msg = new MqttApplicationMessageBuilder()
+                                    .WithTopic(RESOLVER_CLIENT_MSG)
+                                    .WithPayload(msgJson.ToString())
+                                    .WithExactlyOnceQoS()
+                                    .Build();
+
+                                await Client.PublishAsync(msg);
+                                
+                            }
+                        }
+                        else if(msgItem.Link.Contains("http"))
+                        {
+                            
+                            msgJson.Remove("Html");
+                            msgJson["Type"] = (int)msgJson.GetValue("Type");
+                            msgJson["LinkType"] = (int)msgJson.GetValue("LinkType");
+                            
+                            Console.WriteLine(msgJson.ToString());
+                            var msg = new MqttApplicationMessageBuilder()
+                                    .WithTopic(RESOLVER_CLIENT_MSG)
+                                    .WithPayload(msgJson.ToString())
+                                    .WithExactlyOnceQoS()
+                                    .Build();
+
+                            await Client.PublishAsync(msg);
+                        }
+                    }
+                }
+                else
+                {
+                    return new HttpResponseMessage(HttpStatusCode.BadRequest);
+                }
                 return new HttpResponseMessage(HttpStatusCode.OK);
             }
             else
@@ -118,6 +162,7 @@ namespace PlatformManagementConsole.Controllers
                 return new HttpResponseMessage(HttpStatusCode.InternalServerError);
             }
         }
+
         
         private async Task MqttConfigStart(String MQTT_IP, int MQTT_Port, Double MQTT_KeepAlive)
         {

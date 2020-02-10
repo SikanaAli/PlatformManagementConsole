@@ -68,7 +68,7 @@ namespace PlatformManagementConsole.Controllers
 
         // POST: api/Forms
         [HttpPost]
-        public async Task<HttpResponseMessage> Post([FromBody] JObject form)
+        public async Task<HttpResponseMessage> AddForm([FromBody] JObject form)
         {
             HtmlAgilityPack.HtmlDocument htmlDoc = new HtmlAgilityPack.HtmlDocument();
 
@@ -108,6 +108,51 @@ namespace PlatformManagementConsole.Controllers
             return msg;
         }
 
+
+        [HttpPost]
+        [Route("AddMessage")]
+        public  async Task<HttpResponseMessage> AddMessage ([FromBody] JObject msg)
+        {
+
+                using (var db = new PmcDbContext())
+                {
+                    try
+                    {
+                        db.Messages.Add(new Message
+                        {
+                            Image = msg.ContainsKey("Image") ? msg.GetValue("Image").ToString() : null , //
+                            Title = msg.GetValue("Title").ToString(),
+                            Content = msg.GetValue("Content").ToString(),
+                            MsgFormat = (int)msg.GetValue("Type"),
+                            LinkTitle = msg.GetValue("LinkTitle").ToString(),
+                            LinkType = (int)msg.GetValue("LinkType"),
+                            Link = msg.GetValue("Link").ToString(),
+                            MsgExp = (DateTime)msg.GetValue("ExpiryDate"),
+                            MsgHtml = msg.GetValue("Html").ToString(),
+                            MsgJson = msg.ToString()
+                            
+                        });
+
+                        db.SaveChanges();
+
+                        var msgList = db.Messages.ToList();
+                        await _hubContext.Clients.All.SendAsync("Messages", msgList);
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+
+                    
+
+                    
+                }
+            
+            var response = new HttpResponseMessage(HttpStatusCode.OK);
+            
+            return response;
+        }
         // PUT: api/Forms/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
