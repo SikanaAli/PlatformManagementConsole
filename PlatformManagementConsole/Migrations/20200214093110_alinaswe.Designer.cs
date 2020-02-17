@@ -9,8 +9,8 @@ using PlatformManagementConsole.Contexts;
 namespace PlatformManagementConsole.Migrations
 {
     [DbContext(typeof(PmcDbContext))]
-    [Migration("20200209134842_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200214093110_alinaswe")]
+    partial class alinaswe
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

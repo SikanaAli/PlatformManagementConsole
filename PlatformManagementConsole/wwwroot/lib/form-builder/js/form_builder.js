@@ -611,7 +611,7 @@ $(document).ready(function () {
                             childNodeObj.LabelArray = []
 
                             $(node).find("table th").each((index, el) => {
-                                childNodeObj.LableArray.push(el.textContent)
+                                childNodeObj.LabelArray.push(el.textContent)
                             })
                             childNodeObj.Range = Number($(node).find(".title2").attr("colspan")) - 1;
                             break
@@ -714,6 +714,13 @@ $(document).ready(function () {
 
     /*FORM BUILDER End */
 
+    //Search Forms List
+    $("#form-list-search").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+        $("#form-list-group li").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
     
     //Check if Form title has been added or removed
     let preview_el = document.querySelector(".preview")

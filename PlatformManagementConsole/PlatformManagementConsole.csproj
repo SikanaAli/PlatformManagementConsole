@@ -6,11 +6,6 @@
     <StartupObject>PlatformManagementConsole.Program</StartupObject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Migrations\20200209133653_InitialCreate.cs" />
-    <Compile Remove="Migrations\20200209133653_InitialCreate.Designer.cs" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.17" />

@@ -45,6 +45,8 @@
         $('#card-body').children('p').text($(e.target).val())
     })
 
+
+
     $("#msgLinkSelect").change((e) => {
         console.log($(e.target).val())
         if ($(e.target).val() == 1) {
@@ -167,6 +169,7 @@
                 data: JSON.stringify(msg),
                 success: (res) => {
                     $("#loading-modal").modal("hide")
+                    lottie.destroy();
                     iziToast.success({
                         title: 'Message',
                         message: "Message Sent",
@@ -174,6 +177,7 @@
                 },
                 error: (err) => {
                     $("#loading-modal").modal("hide")
+                    lottie.destroy();
                     iziToast.error({
                         title: 'Message',
                         message: "An error occured while sending message",
@@ -181,6 +185,7 @@
                     console.log(err)
                 }
             })
+
             //setTimeout(() => {
             //    $("#loading-modal").modal("hide")
             //    lottie.destroy()

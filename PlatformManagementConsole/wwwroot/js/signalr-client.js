@@ -84,12 +84,11 @@ s_client.on("ssdStatus", (data) => {
         $(leaf).children("a").children("i").removeClass("isOnline");
         $(leaf).children("a").children("i").addClass("isOffline");
     }
-
-
 });
 
 let FormHtml = []
 let FormsOptions = ''
+let htmlOptionsReady = false
 
 s_client.on("RefreshFormsList", (Forms) => {
     FormHtml = [];
@@ -106,6 +105,11 @@ s_client.on("RefreshFormsList", (Forms) => {
             formList.prepend(listItem);
             FormIndex++;
         })
+        //set html Options for message page liketype form
+        let select = '<lable>Forms</lable><select name="selectedForm" class="form-control link">' + FormsOptions + '</select>'
+        $("#selectedLinkType").html(select);
+
+
         $(".form-item").click(function (e) {
 
             $(this).parent().find(".form-item").css("background-image", "linear-gradient(to right,rgb(255,255,255),rgba(255,255,255))")

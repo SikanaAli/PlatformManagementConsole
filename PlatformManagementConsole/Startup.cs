@@ -39,6 +39,7 @@ namespace PlatformManagementConsole
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddEntityFrameworkSqlite().AddDbContext<PmcDbContext>();
             
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -53,12 +54,15 @@ namespace PlatformManagementConsole
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            using (var db = new PmcDbContext())
-            {
-                db.Database.EnsureCreated();
-                db.Database.Migrate();
-            }
-
+            //using (var servicesscope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            //{
+            //    var context = servicesscope.ServiceProvider.GetRequiredService<PmcDbContext>();
+            //    if (!context.Database.CanConnect())
+            //    {
+            //        context.Database.Migrate();
+            //    }
+            //}
+            
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
