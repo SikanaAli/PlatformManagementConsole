@@ -4,6 +4,7 @@
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
     <StartupObject>PlatformManagementConsole.Program</StartupObject>
+    <UserSecretsId>4e98f1bd-5599-4f7b-9b46-ea12e1f7fdbc</UserSecretsId>
   </PropertyGroup>
 
 
