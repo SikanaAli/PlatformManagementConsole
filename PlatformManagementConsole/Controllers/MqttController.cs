@@ -65,6 +65,7 @@ namespace PlatformManagementConsole.Controllers
                 
                 if (Client.IsConnected)
                 {
+                    
                     response.StatusCode = HttpStatusCode.OK;
                     response.ReasonPhrase = "Mqtt Connected";
                     return response;
